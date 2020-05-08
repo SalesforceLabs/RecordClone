@@ -1,0 +1,33 @@
+<template>
+  <template if:true={hasElements}>
+    <li class="details-item">
+      <h4 onclick={toggle} class="details-item-title">
+        <lightning-icon
+          class="toggle-icon"
+          icon-name={iconName}
+          size="x-small"
+        ></lightning-icon>
+        {title}
+        <template if:true={isError}>
+          <br />
+          <span class="child-rel-error">
+            {errorMessage}
+          </span>
+        </template>
+      </h4>
+      <template if:true={shouldShow}>
+        <ul class="details-item-elements">
+          <template for:each={okItems} for:item="ok">
+            <li key={ok.apiName}>{ok.label} ({ok.apiName})</li>
+          </template>
+          <template for:each={ngItems} for:item="ng">
+            <li key={ng.apiName}>
+              <del>{ng.label} ({ng.apiName})</del> :
+              <span class="ncf-reason">{ng.errorMessage}</span>
+            </li>
+          </template>
+        </ul>
+      </template>
+    </li>
+  </template>
+</template>

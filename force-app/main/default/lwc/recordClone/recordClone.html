@@ -1,0 +1,101 @@
+<template>
+  <article class="slds-card">
+    <!-- show component title if set -->
+    <template if:true={hasTitle}>
+      <div class="slds-card__header slds-grid">
+        <header class="slds-media slds-media_center slds-has-flexi-truncate">
+          <div class="slds-media__body">
+            <h2 class="slds-card__header-title">
+              <span class="slds-truncate">{componentTitle}</span>
+            </h2>
+          </div>
+        </header>
+      </div>
+    </template>
+
+    <div class="slds-card__body slds-card__body_inner">
+      <template if:true={isInitialized}>
+        <template if:true={sObjectSummary.isClonable}>
+          <!-- while executing clone, show spinner -->
+          <template if:true={isCloning}>
+            <div>
+              <lightning-spinner
+                alternative-text="Loading"
+                size="medium"
+              ></lightning-spinner>
+              <h6>Cloning...</h6>
+            </div>
+          </template>
+          <!-- ready to clone state  -->
+          <template if:false={isCloning}>
+            <!-- if the sObject has name field, an input for the new record name shown -->
+            <template if:true={sObjectSummary.isNamable}>
+              <lightning-input
+                class="slds-m-bottom_x-small"
+                type="text"
+                value={newParentRecordName}
+                onchange={handleRecordNameChange}
+                label={nameInputLabel}
+                placeholder={sObjectSummary.nameField}
+                variant={nameInputVariant}
+              ></lightning-input>
+            </template>
+
+            <!-- clone execution button -->
+            <lightning-button
+              label={cloneButtonLabel}
+              onclick={onclickClone}
+              variant="brand"
+            ></lightning-button>
+          </template>
+        </template>
+
+        <!-- show error message in case that the sObject is not supported to clone for the user -->
+        <template if:false={sObjectSummary.isClonable}>
+          <div>
+            <h6>This sObject is not supported.</h6>
+          </div>
+        </template>
+      </template>
+
+      <!-- while initializing the component -->
+      <template if:false={isInitialized}>
+        <div>
+          <lightning-spinner
+            alternative-text="Loading"
+            size="medium"
+          ></lightning-spinner>
+          <h6>Initializing...</h6>
+        </div>
+      </template>
+    </div>
+
+    <!-- [Option] a user can see which children and fields are bundled. -->
+    <template if:true={showDetails}>
+      <footer class="slds-card__footer">
+        <ul>
+          <!-- list of child objects that will be cloned together -->
+          <c-record-clone-related-list-item
+            title={childrenTitle}
+            ok-items={clonableChildren}
+            ng-items={notClonableChildren}
+            error-message={childrenListError}
+            is-error={isExceedingMaxChidrenCount}
+          ></c-record-clone-related-list-item>
+
+          <!-- list of fields that will be excluded from cloning -->
+          <c-record-clone-related-list-item
+            title={excludedFieldsTitle}
+            ng-items={notClonableFields}
+          ></c-record-clone-related-list-item>
+
+          <!-- list of fields that will be included in cloning -->
+          <c-record-clone-related-list-item
+            title={includedFieldsTitle}
+            ok-items={clonableFields}
+          ></c-record-clone-related-list-item>
+        </ul>
+      </footer>
+    </template>
+  </article>
+</template>

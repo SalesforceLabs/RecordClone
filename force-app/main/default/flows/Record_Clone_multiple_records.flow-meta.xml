@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <name>CloneExecute</name>
+        <label>Clone</label>
+        <locationX>495</locationX>
+        <locationY>59</locationY>
+        <actionName>RecordCloneController</actionName>
+        <actionType>apex</actionType>
+        <inputParameters>
+            <name>recordIds</name>
+            <value>
+                <elementReference>selectedIds</elementReference>
+            </value>
+        </inputParameters>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </actionCalls>
+    <interviewLabel>Record Clone - multiple records {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Record Clone - Multiple records</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>Flow</processType>
+    <start>
+        <locationX>149</locationX>
+        <locationY>60</locationY>
+        <connector>
+            <targetReference>CloneExecute</targetReference>
+        </connector>
+    </start>
+    <status>Active</status>
+    <variables>
+        <name>contextId</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>true</isOutput>
+    </variables>
+    <variables>
+        <name>selectedIds</name>
+        <dataType>String</dataType>
+        <isCollection>true</isCollection>
+        <isInput>true</isInput>
+        <isOutput>true</isOutput>
+    </variables>
+</Flow>
