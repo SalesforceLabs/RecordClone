@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>48.0</apiVersion>
+    <isExposed>true</isExposed>
+    <masterLabel>Record Clone Configuration Helper</masterLabel>
+    <description>Helper component for Record Clone.</description>
+    <targets>
+        <target>lightning__RecordPage</target>
+        <target>lightning__AppPage</target>
+        <target>lightning__HomePage</target>
+        <target>lightning__UtilityBar</target>
+        <target>lightning__FlowScreen</target>
+        <target>lightningCommunity__Default</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightning__RecordPage, lightning__AppPage, lightning__HomePage, lightning__UtilityBar, lightning__FlowScreen, lightningCommunity__Default">
+            <property name="targetSObject" type="String" label="Debug target sObject name" default="" />
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>

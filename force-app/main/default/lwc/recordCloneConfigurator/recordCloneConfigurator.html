@@ -1,0 +1,33 @@
+<template>
+  <div class="slds-card">
+    <div class="slds-card__body slds-card__body_inner">
+      <h1 class="title">Record Clone Configuration Helper</h1>
+      <div class="section" style="position:relative;min-height:80px;">
+        <template if:true={isInvalidObjectName}>
+          <h4 class="slds-vertical-bottom_small">Error : Invalid sObject</h4>
+        </template>
+        <template if:false={isInvalidObjectName}>
+          <template if:false={hasObjectName}>
+            <lightning-spinner
+              size="small"
+              alternative-text="initializing"
+            ></lightning-spinner>
+          </template>
+          <template if:true={hasObjectName}>
+            <h4 class="section-title slds-m-bottom_small slds-p-bottom_small">
+              Child objects related to {objectName}
+            </h4>
+            <ul>
+              <template for:each={childrenList} for:item="child">
+                <li key={child}>{child}</li>
+              </template>
+            </ul>
+            <p class="slds-m-vertical_small" style="word-break: break-all;">
+              {childrenListStr}
+            </p>
+          </template>
+        </template>
+      </div>
+    </div>
+  </div>
+</template>
