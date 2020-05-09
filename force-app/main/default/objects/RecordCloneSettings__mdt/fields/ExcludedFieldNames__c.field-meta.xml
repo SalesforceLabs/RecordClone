@@ -7,6 +7,7 @@
 -->
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>ExcludedFieldNames__c</fullName>
+    <deprecated>false</deprecated>
     <description>field names to be excluded. comma separated</description>
     <externalId>false</externalId>
     <fieldManageability>SubscriberControlled</fieldManageability>

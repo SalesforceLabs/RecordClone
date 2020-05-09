@@ -7,6 +7,7 @@
 -->
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>ChildRecordNameType__c</fullName>
+    <deprecated>false</deprecated>
     <externalId>false</externalId>
     <fieldManageability>DeveloperControlled</fieldManageability>
     <label>Child Record Name Format</label>
