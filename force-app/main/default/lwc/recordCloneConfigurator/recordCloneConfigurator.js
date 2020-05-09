@@ -20,7 +20,7 @@ export default class RecordCloneConfigurator extends LightningElement {
   objectName = "";
 
   @api
-  targetSObject = "";
+  targetSObject;
 
   isInvalidObjectName = false;
 

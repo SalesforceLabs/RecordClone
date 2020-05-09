@@ -26,7 +26,7 @@ public class RecordCloneDebugController {
     String objectName
   ) {
     if (String.isBlank(objectName)) {
-      if (recordId == null) {
+      if (String.isBlank(recordId)) {
         return null;
       }
       DescribeSObjectResult describe = recordId.getSObjectType().getDescribe();
