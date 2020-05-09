@@ -1,6 +1,10 @@
+# Copyright (c) 2020, salesforce.com, inc.
+# All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause
+# For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
+
 # List files or directories below to ignore them when running prettier
 # More information: https://prettier.io/docs/en/ignore.html
-#
 
 .localdevserver
 .sfdx

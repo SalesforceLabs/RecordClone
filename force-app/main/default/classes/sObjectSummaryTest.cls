@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2020, salesforce.com, inc.
+ * All rights reserved.
+ * SPDX-License-Identifier: BSD-3-Clause
+ * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
+ */
 @IsTest
 private class sObjectSummaryTest {
   @IsTest
@@ -18,7 +24,7 @@ private class sObjectSummaryTest {
 
   @IsTest
   private static void withExcludedField() {
-    String accExcluded = 'Phone, OperatingHoursId';
+    String accExcluded = 'Phone';
     sObjectSummary accObj = new sObjectSummary(
       Account.sObjectType.getDescribe(),
       accExcluded
@@ -118,13 +124,10 @@ private class sObjectSummaryTest {
 
   @IsTest
   private static void testGetByRecordId() {
-    OperatingHours oh = new OperatingHours(Name = 'test');
-    insert oh;
 
     Account acc = new Account(
       Name = 'Hello',
-      Phone = '0123456789',
-      OperatingHoursId = oh.Id
+      Phone = '0123456789'
     );
     insert acc;
 

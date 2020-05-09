@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2020, salesforce.com, inc.
+ * All rights reserved.
+ * SPDX-License-Identifier: BSD-3-Clause
+ * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
+ */
 import { LightningElement, api } from "lwc";
 
 export default class RecordCloneRelatedListItem extends LightningElement {
@@ -23,9 +29,7 @@ export default class RecordCloneRelatedListItem extends LightningElement {
   }
 
   get iconName() {
-    return this.shouldShow
-      ? "utility:contract_alt"
-      : "utility:expand_alt";
+    return this.shouldShow ? "utility:contract_alt" : "utility:expand_alt";
   }
 
   get okLength() {
@@ -39,5 +43,4 @@ export default class RecordCloneRelatedListItem extends LightningElement {
   get totalLength() {
     return this.okLength + this.ngLength;
   }
-
 }

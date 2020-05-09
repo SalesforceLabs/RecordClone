@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2020, salesforce.com, inc.
+ * All rights reserved.
+ * SPDX-License-Identifier: BSD-3-Clause
+ * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
+ */
 global with sharing class RecordCloneController {
   // get sObject summarized information so that users can see what's going on during clone.
   @AuraEnabled(cacheable=true)

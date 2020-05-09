@@ -1,4 +1,10 @@
 <svg id="astro" xmlns="http://www.w3.org/2000/svg" width="360" height="360" viewBox="0 0 360 360">
+<!-- 
+  Copyright (c) 2020, salesforce.com, inc.
+  All rights reserved.
+  SPDX-License-Identifier: BSD-3-Clause
+  For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause 
+-->
   <defs>
     <style>
       .cls-1 {
