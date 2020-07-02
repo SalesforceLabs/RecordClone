@@ -20,6 +20,8 @@ public class sObjectSummary {
   @AuraEnabled
   public List<sFieldSummary> fields;
   @AuraEnabled
+  public Boolean isDeletable;
+  @AuraEnabled
   public String errorMessage;
   @AuraEnabled
   public Map<String, sObjectSummary> children;
@@ -165,6 +167,8 @@ public class sObjectSummary {
     }
     this.errorMessage = String.join(errors, ',');
     this.isClonable = errors.size() == 0;
+
+    this.isDeletable = describe.isDeletable();
 
     Set<String> excludedFieldNameSet = new Set<String>(
       new List<String>{

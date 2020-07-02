@@ -115,7 +115,15 @@ public class RecordCloneHandler {
             FROM OpportunityContactRole
             WHERE OpportunityId = :cloned.Id
           ];
-          delete ocrs;
+
+          if (ocrs.size() > 0 && childSummary.isDeletable) {
+            try {
+              delete ocrs;
+            } catch (DMLException e) {
+              // if failed to delete auto-generated OpportunityContactRole,
+              // leave it.
+            }
+          }
         }
 
         for (Integer i = 0; i < children.size(); i++) {
@@ -193,6 +201,7 @@ public class RecordCloneHandler {
       // remove child record IDs, assign then cloned parent record Id to ref field
       List<sObject> childrens = new List<sObject>();
       List<Id> ocrIds = new List<Id>();
+      Boolean ocrIsDeletable = false;
       for (String childRelName : sObjectSummary.children.keySet()) {
         sObjectSummary childSummary = sObjectSummary.children.get(childRelName);
 
@@ -218,6 +227,7 @@ public class RecordCloneHandler {
             sObjectSummary.apiName == 'Opportunity' &&
             childRelName == 'OpportunityContactRoles'
           ) {
+            ocrIsDeletable = sObjectSummary.isDeletable;
             ocrIds.add(cloning.Id);
           }
 
@@ -247,7 +257,7 @@ public class RecordCloneHandler {
         }
       }
 
-      if (ocrIds.size() > 0) {
+      if (ocrIds.size() > 0 && ocrIsDeletable) {
         List<OpportunityContactRole> ocrs = [
           SELECT Id
           FROM OpportunityContactRole
