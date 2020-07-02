@@ -263,7 +263,12 @@ public class RecordCloneHandler {
           FROM OpportunityContactRole
           WHERE OpportunityId IN :ocrIds
         ];
-        delete ocrs;
+        try {
+          delete ocrs;
+        } catch (DMLException e) {
+          // if failed to delete auto-generated OpportunityContactRole,
+          // leave it.
+        }
       }
 
       insert childrens;

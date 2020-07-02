@@ -73,7 +73,6 @@ export default class RecordCloneConfigurator extends LightningElement {
   };
 
   handleErrors = errors => {
-    console.log(errors);
     let errorMessage = "Unknown error";
     if (errors && errors.body) {
       errorMessage = "";
