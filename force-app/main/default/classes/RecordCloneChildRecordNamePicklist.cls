@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
-global class RecordCloneChildRecordNamePicklist extends VisualEditor.DynamicPickList {
+global with sharing class RecordCloneChildRecordNamePicklist extends VisualEditor.DynamicPickList {
   public static String labelOriginalName = '[Child Record Name]';
   public static String labelWithCloned = 'Cloned - [Child Record Name]';
   public static String labelWithClonedAndDate = 'Cloned - [Child Record Name] - [YYYY/mm/dd HH:ii]';

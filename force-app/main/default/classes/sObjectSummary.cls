@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
-public class sObjectSummary {
+public with sharing class sObjectSummary {
   @AuraEnabled
   public String label;
   @AuraEnabled
@@ -32,7 +32,7 @@ public class sObjectSummary {
   @AuraEnabled
   public String childRecordNameFormat;
 
-  public class sFieldSummary {
+  public with sharing class sFieldSummary {
     @AuraEnabled
     public String apiName;
     @AuraEnabled
