@@ -10,7 +10,7 @@ import { ShowToastEvent } from "lightning/platformShowToastEvent";
 
 export default class RecordCloneConfigurator extends LightningElement {
   @api
-  recordId;
+  recordId = "";
 
   @track
   childrenList = [];
@@ -20,7 +20,7 @@ export default class RecordCloneConfigurator extends LightningElement {
   objectName = "";
 
   @api
-  targetSObject;
+  targetSObject = "";
 
   isInvalidObjectName = false;
 
