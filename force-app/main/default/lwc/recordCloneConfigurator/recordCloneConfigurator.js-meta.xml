@@ -6,7 +6,7 @@
   For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause 
 -->
 <LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
-    <apiVersion>48.0</apiVersion>
+    <apiVersion>50.0</apiVersion>
     <isExposed>true</isExposed>
     <masterLabel>Record Clone Configuration Helper</masterLabel>
     <description>Helper component for Record Clone.</description>
@@ -20,7 +20,11 @@
         <target>lightningCommunity__Default</target>
     </targets>
     <targetConfigs>
-        <targetConfig targets="lightning__RecordPage, lightning__AppPage, lightning__HomePage, lightning__UtilityBar, lightning__FlowScreen, lightningCommunity__Default">
+        <targetConfig targets="lightning__RecordPage, lightning__AppPage, lightning__HomePage, lightning__UtilityBar, lightning__FlowScreen">
+            <property name="targetSObject" type="String" label="Debug target sObject name" default="" />
+        </targetConfig>
+        <targetConfig targets="lightningCommunity__Default">
+            <property name="recordId" type="String" label="Record ID" description="The value should be {!recordId}."/>
             <property name="targetSObject" type="String" label="Debug target sObject name" default="" />
         </targetConfig>
     </targetConfigs>
