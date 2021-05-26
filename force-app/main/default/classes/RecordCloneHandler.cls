@@ -180,12 +180,33 @@ public with sharing class RecordCloneHandler {
     List<sObject> clonings,
     sObjectSummary sObjectSummary
   ) {
+
+    // append to child records' name fields
+    String todayStr = Datetime.now().format('yyyy/MM/dd HH:mm');
     for (sObject cloning : clonings) {
       cloning.Id = null;
       if (sObjectSummary.isNamable) {
         // Parent record name
         // use sObject parentRecordNameFormat or specify custom record name inputted by user.
         // cloning.put(sObjectSummary.nameField, newRecordName);
+
+        if (sObjectSummary.isNamable) {
+          String originalRecordName = (String) cloning.get(sObjectSummary.nameField);
+          String nameValue = originalRecordName;
+          if (
+            sObjectSummary.childRecordNameFormat ==
+            RecordCloneChildRecordNamePicklist.valueWithCloned
+          ) {
+            nameValue = 'Cloned - ' + originalRecordName;
+          } else if (
+            sObjectSummary.childRecordNameFormat ==
+            RecordCloneChildRecordNamePicklist.valueWithClonedAndDate
+          ) {
+            nameValue = 'Cloned - ' + originalRecordName + ' - ' + todayStr;
+          }
+          cloning.put(sObjectSummary.nameField, nameValue);
+        }
+
       }
     }
 
@@ -195,8 +216,6 @@ public with sharing class RecordCloneHandler {
       sObjectSummary.children != null &&
       sObjectSummary.children.keySet().size() > 0
     ) {
-      // append to child records' name fields
-      String todayStr = Datetime.now().format('yyyy/MM/dd HH:mm');
 
       // remove child record IDs, assign then cloned parent record Id to ref field
       List<sObject> childrens = new List<sObject>();
