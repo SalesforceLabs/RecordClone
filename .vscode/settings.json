@@ -2,7 +2,8 @@
   "search.exclude": {
     "**/node_modules": true,
     "**/bower_components": true,
-    "**/.sfdx": true
+    "**/.sfdx": true,
+    "**/.localdevserver": true,
   },
   // "salesforcedx-vscode-core.push-or-deploy-on-save.enabled": true,
   "salesforcedx-vscode-core.retrieve-test-code-coverage": true

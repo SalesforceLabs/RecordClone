@@ -180,7 +180,6 @@ public with sharing class RecordCloneHandler {
     List<sObject> clonings,
     sObjectSummary sObjectSummary
   ) {
-
     // append to child records' name fields
     String todayStr = Datetime.now().format('yyyy/MM/dd HH:mm');
     for (sObject cloning : clonings) {
@@ -206,7 +205,6 @@ public with sharing class RecordCloneHandler {
           }
           cloning.put(sObjectSummary.nameField, nameValue);
         }
-
       }
     }
 
@@ -216,7 +214,6 @@ public with sharing class RecordCloneHandler {
       sObjectSummary.children != null &&
       sObjectSummary.children.keySet().size() > 0
     ) {
-
       // remove child record IDs, assign then cloned parent record Id to ref field
       List<sObject> childrens = new List<sObject>();
       List<Id> ocrIds = new List<Id>();

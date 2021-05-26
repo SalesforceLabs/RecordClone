@@ -197,7 +197,10 @@ private class RecordCloneHandlerTest {
     originals.add(acc);
     originals.add(acc2);
 
-    List<sObject> clones = RecordCloneHandler.cloneRecords(originals, accSummary1);
+    List<sObject> clones = RecordCloneHandler.cloneRecords(
+      originals,
+      accSummary1
+    );
     System.assertNotEquals(clones, null);
     System.assertEquals(clones.size(), 2);
   }
