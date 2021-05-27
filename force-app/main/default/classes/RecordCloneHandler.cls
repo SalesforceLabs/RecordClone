@@ -6,7 +6,7 @@
  */
 public with sharing class RecordCloneHandler {
   // single records
-  public static sObject getOriginalRecord(
+  public static CloneQueryResult getOriginalRecord(
     Id recordId,
     sObjectSummary sObjSummary
   ) {
@@ -19,20 +19,25 @@ public with sharing class RecordCloneHandler {
       String q =
         'SELECT Id, ' +
         String.join(sObjSummary.filterClonableFields(), ',') +
-        buildChildrenSelectQuery(sObjSummary) +
         ' FROM ' +
         sObjSummary.apiName +
         ' WHERE Id = \'' +
         recordId +
         '\'';
-      return Database.query(q);
+      sObject parent = Database.query(q);
+      Map<String, List<sObject>> childrens = execChildQueries(
+        recordId,
+        sObjSummary
+      );
+      CloneQueryResult cqr = new CloneQueryResult(parent, childrens);
+      return cqr;
     } catch (System.QueryException e) {
       return null;
     }
   }
 
   // multiple records
-  public static List<sObject> getOriginalRecords(
+  public static List<CloneQueryResult> getOriginalRecords(
     List<Id> recordIds,
     sObjectSummary sObjSummary
   ) {
@@ -45,20 +50,105 @@ public with sharing class RecordCloneHandler {
       String q =
         'SELECT Id, ' +
         String.join(sObjSummary.filterClonableFields(), ',') +
-        buildChildrenSelectQuery(sObjSummary) +
         ' FROM ' +
         sObjSummary.apiName +
         ' WHERE Id IN (\'' +
         String.join(recordIds, '\',\'') +
         '\' )';
-      return Database.query(q);
+      List<sObject> parents = Database.query(q);
+
+      Map<String, Map<String, List<sObject>>> childrens = execChildrenQueries(
+        recordIds,
+        sObjSummary
+      );
+      List<CloneQueryResult> cqrs = new List<CloneQueryResult>();
+      for (sObject parent : parents) {
+        Map<String, List<sObject>> children = childrens.get(parent.Id);
+        cqrs.add(new CloneQueryResult(parent, children));
+      }
+
+      return cqrs;
     } catch (System.QueryException e) {
       return null;
     }
   }
 
+  public static Map<String, List<sObject>> execChildQueries(
+    Id parentId,
+    sObjectSummary parentSummary
+  ) {
+    Map<String, List<sObject>> childrens = new Map<String, List<sObject>>();
+    if (parentSummary.children != null && parentSummary.children.size() > 0) {
+      for (String childRelName : parentSummary.children.keySet()) {
+        sObjectSummary child = parentSummary.children.get(childRelName);
+        List<String> childFields = child.filterClonableFields();
+        if (child.isClonable && childFields.size() > 0) {
+          String q =
+            'SELECT Id, ' +
+            String.join(childFields, ',') +
+            ' FROM ' +
+            child.apiName +
+            ' WHERE ' +
+            child.parentRelationshipField +
+            ' = \'' +
+            parentId +
+            '\'';
+          List<sObject> res = Database.query(q);
+          childrens.put(childRelName, res);
+        }
+      }
+    }
+    return childrens;
+  }
+
+  public static Map<String, Map<String, List<sObject>>> execChildrenQueries(
+    List<Id> parentIds,
+    sObjectSummary parentSummary
+  ) {
+    Map<String, Map<String, List<sObject>>> childrens = new Map<String, Map<String, List<sObject>>>();
+    Map<String, List<sObject>> children = new Map<String, List<sObject>>();
+    if (parentSummary.children != null && parentSummary.children.size() > 0) {
+      for (String childRelName : parentSummary.children.keySet()) {
+        sObjectSummary child = parentSummary.children.get(childRelName);
+        List<String> childFields = child.filterClonableFields();
+        childFields.add(child.parentRelationshipField);
+        childFields = new List<String>(new Set<String>(childFields));
+        if (child.isClonable && childFields.size() > 0) {
+          String q =
+            'SELECT Id, ' +
+            String.join(childFields, ',') +
+            ' FROM ' +
+            child.apiName +
+            ' WHERE ' +
+            child.parentRelationshipField +
+            ' IN (\'' +
+            String.join(parentIds, '\',\'') +
+            '\')';
+          List<sObject> records = Database.query(q);
+          for (sObject record : records) {
+            Id pId = (Id) record.get(child.parentRelationshipField);
+            if (childrens.get(pId) == null) {
+              childrens.put(
+                pId,
+                new Map<String, List<sObject>>{
+                  childRelName => new List<sObject>{ record }
+                }
+              );
+            } else if (childrens.get(pId).get(childRelName) == null) {
+              childrens.get(pId).put(childRelName, new List<sObject>{ record });
+            } else {
+              childrens.get(pId).get(childRelName).add(record);
+            }
+          }
+        }
+      }
+    }
+    return childrens;
+  }
+
   public static sObject cloneRecord(
     sObject cloned,
+    Map<String, List<sObject>> childrens,
     sObjectSummary sObjectSummary,
     String newRecordName,
     String childRecordNameType
@@ -87,33 +177,14 @@ public with sharing class RecordCloneHandler {
       String todayStr = Datetime.now().format('yyyy/MM/dd HH:mm');
 
       // remove child record IDs, assign then cloned parent record Id to ref field
-      for (String childRelName : sObjectSummary.children.keySet()) {
+      for (String childRelName : childrens.keySet()) {
         sObjectSummary childSummary = sObjectSummary.children.get(childRelName);
 
         if (!childSummary.isClonable) {
           continue;
         }
 
-        List<sObject> children;
-        try {
-          try {
-            // System.QueryException: Aggregate query has too many rows for direct assignment, use FOR loop
-            // https://www.kineticgrowth.com/system-queryexception-aggregate-query-many-rows-direct-assignment-use-loop/
-            // https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/langCon_apex_loops_for_SOQL.htm
-            // There are weird cases.
-            // https://developer.salesforce.com/forums/?id=906F0000000AtTyIAK
-            children = cloned.getSObjects(childRelName);
-          } catch (System.QueryException qe) {
-            System.debug('QueryException. Now try using for loop.');
-            children = new List<sObject>();
-            for (sObject child : cloned.getSObjects(childRelName)) {
-              children.add(child);
-            }
-          }
-        } catch (System.SObjectException e) {
-          System.debug('SObjectException');
-          continue;
-        }
+        List<sObject> children = childrens.get(childRelName);
         if (children == null || children.size() == 0) {
           continue;
         }
@@ -164,39 +235,29 @@ public with sharing class RecordCloneHandler {
           children[i].put(childSummary.parentRelationshipField, cloned.Id);
         }
         insert children;
+
+        System.debug(childSummary.apiName + ' : ' + children.size());
       }
     }
 
     return cloned;
   }
 
-  private static String buildChildrenSelectQuery(sObjectSummary sObjSummary) {
-    // concatenate clonable field names of child sObjects to build SOQL string
-    String childrenSelect = '';
-    if (sObjSummary.children != null && sObjSummary.children.size() > 0) {
-      for (String childRelName : sObjSummary.children.keySet()) {
-        sObjectSummary child = sObjSummary.children.get(childRelName);
-        List<String> childFields = child.filterClonableFields();
-        if (child.isClonable && childFields.size() > 0) {
-          childrenSelect +=
-            ', ( SELECT Id, ' +
-            String.join(childFields, ',') +
-            ' FROM ' +
-            childRelName +
-            ' )';
-        }
-      }
-    }
-    return childrenSelect;
-  }
-
   public static List<sObject> cloneRecords(
-    List<sObject> clonings,
+    List<CloneQueryResult> results,
     sObjectSummary sObjectSummary
   ) {
     // append to child records' name fields
     String todayStr = Datetime.now().format('yyyy/MM/dd HH:mm');
-    for (sObject cloning : clonings) {
+
+    List<sObject> parents = new List<sObject>();
+    for (CloneQueryResult result : results) {
+      parents.add(result.parent);
+    }
+
+    List<Id> oldIds = new List<Id>();
+    for (sObject cloning : parents) {
+      oldIds.add(cloning.Id);
       cloning.Id = null;
       if (sObjectSummary.isNamable) {
         // Parent record name
@@ -224,7 +285,14 @@ public with sharing class RecordCloneHandler {
       }
     }
 
-    insert clonings;
+    // insert parent records
+    insert parents;
+
+    // create a map matching old and new ids;
+    Map<Id, Id> idMap = new Map<Id, Id>();
+    for (Integer i = 0; i < parents.size(); i++) {
+      idMap.put(oldIds[i], parents[i].Id);
+    }
 
     if (
       sObjectSummary.children != null &&
@@ -241,51 +309,51 @@ public with sharing class RecordCloneHandler {
           continue;
         }
 
-        for (sObject cloning : clonings) {
-          sObject[] children;
-          try {
-            children = cloning.getSObjects(childRelName);
-          } catch (System.SObjectException e) {
-            continue;
-          }
-
-          if (children == null) {
-            continue;
-          }
-
-          // On creating an opportunity record, system automatically creates an OpportunityContactRole record.
-          // Delete the created record as of now.
-          if (
-            sObjectSummary.apiName == 'Opportunity' &&
-            childRelName == 'OpportunityContactRoles'
-          ) {
-            ocrIsDeletable = sObjectSummary.isDeletable;
-            ocrIds.add(cloning.Id);
-          }
-
-          for (Integer i = 0; i < children.size(); i++) {
-            children[i].put('Id', null);
-            if (childSummary.isNamable) {
-              String originalRecordName = (String) children[i]
-                .get(childSummary.nameField);
-              String nameValue = originalRecordName;
-              if (
-                sObjectSummary.childRecordNameFormat ==
-                RecordCloneChildRecordNamePicklist.valueWithCloned
-              ) {
-                nameValue = 'Cloned - ' + originalRecordName;
-              } else if (
-                sObjectSummary.childRecordNameFormat ==
-                RecordCloneChildRecordNamePicklist.valueWithClonedAndDate
-              ) {
-                nameValue = 'Cloned - ' + originalRecordName + ' - ' + todayStr;
-              }
-              children[i].put(childSummary.nameField, nameValue);
+        for (CloneQueryResult result : results) {
+          for (String oldParentId : result.childrens.keySet()) {
+            List<sObject> children = result.childrens.get(childRelName);
+            if (children == null) {
+              continue;
+            }
+            Id newId = idMap.get(oldParentId);
+            // On creating an opportunity record, system automatically creates an OpportunityContactRole record.
+            // Delete the created record as of now.
+            if (
+              sObjectSummary.apiName == 'Opportunity' &&
+              childRelName == 'OpportunityContactRoles'
+            ) {
+              ocrIsDeletable = sObjectSummary.isDeletable;
+              ocrIds.add(newId);
             }
 
-            children[i].put(childSummary.parentRelationshipField, cloning.Id);
+            for (Integer i = 0; i < children.size(); i++) {
+              children[i].put('Id', null);
+              if (childSummary.isNamable) {
+                String originalRecordName = (String) children[i]
+                  .get(childSummary.nameField);
+                String nameValue = originalRecordName;
+                if (
+                  sObjectSummary.childRecordNameFormat ==
+                  RecordCloneChildRecordNamePicklist.valueWithCloned
+                ) {
+                  nameValue = 'Cloned - ' + originalRecordName;
+                } else if (
+                  sObjectSummary.childRecordNameFormat ==
+                  RecordCloneChildRecordNamePicklist.valueWithClonedAndDate
+                ) {
+                  nameValue =
+                    'Cloned - ' +
+                    originalRecordName +
+                    ' - ' +
+                    todayStr;
+                }
+                children[i].put(childSummary.nameField, nameValue);
+              }
+
+              children[i].put(childSummary.parentRelationshipField, newId);
+            }
+            childrens.addAll(children);
           }
-          childrens.addAll(children);
         }
       }
 
@@ -306,6 +374,6 @@ public with sharing class RecordCloneHandler {
       insert childrens;
     }
 
-    return clonings;
+    return parents;
   }
 }

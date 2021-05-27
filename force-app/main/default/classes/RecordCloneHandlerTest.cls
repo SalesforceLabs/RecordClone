@@ -13,30 +13,77 @@ private class RecordCloneHandlerTest {
     insert acc;
     insert con;
 
+    Account acc2 = new Account(Name = 'TestAccount2');
+    insert acc2;
+    List<Contact> cons = new List<Contact>();
+    for (Integer i = 0; i < 200; i++) {
+      cons.add(new Contact(LastName = 'TestContact' + i, AccountId = acc2.Id));
+    }
+    insert cons;
+    List<Opportunity> opps = new List<Opportunity>();
+    for (Integer i = 0; i < 100; i++) {
+      opps.add(
+        new Opportunity(
+          Name = 'TestOpp' + i,
+          StageName = 'New',
+          CloseDate = Date.today(),
+          AccountId = acc2.Id
+        )
+      );
+    }
+    insert opps;
+
+    List<Case> cases = new List<Case>();
+    for (Integer i = 0; i < 50; i++) {
+      cases.add(new Case(Subject = 'TestOpp' + i, AccountId = acc2.Id));
+    }
+    insert cases;
+
     sObjectSummary accSummary = new sObjectSummary(
       Account.sObjectType.getDescribe()
     );
 
-    sObject withNullRecordId = RecordCloneHandler.getOriginalRecord(
+    CloneQueryResult withNullRecordId = RecordCloneHandler.getOriginalRecord(
       null,
       accSummary
     );
     System.assertEquals(withNullRecordId, null);
-    sObject withInvalidRecordId = RecordCloneHandler.getOriginalRecord(
+    CloneQueryResult withInvalidRecordId = RecordCloneHandler.getOriginalRecord(
       con.Id,
       accSummary
     );
     System.assertEquals(withInvalidRecordId, null);
-    sObject withNullSummary = RecordCloneHandler.getOriginalRecord(
+    CloneQueryResult withNullSummary = RecordCloneHandler.getOriginalRecord(
       acc.Id,
       null
     );
     System.assertEquals(withNullSummary, null);
-    sObject withCorrectRecordId = RecordCloneHandler.getOriginalRecord(
+    CloneQueryResult withCorrectRecordId = RecordCloneHandler.getOriginalRecord(
       acc.Id,
       accSummary
     );
     System.assertNotEquals(withCorrectRecordId, null);
+
+    sObjectSummary accSummary2 = sObjectSummary.getByRecordId(
+      acc2.Id,
+      'Contacts,Opportunities,Cases',
+      ''
+    );
+    CloneQueryResult acc2WithManyChildren = RecordCloneHandler.getOriginalRecord(
+      acc2.Id,
+      accSummary2
+    );
+
+    // exec clone
+    sObject clonedAcc2WithManyChildren = RecordCloneHandler.cloneRecord(
+      acc2WithManyChildren.parent,
+      acc2WithManyChildren.childrens,
+      accSummary2,
+      'hello',
+      RecordCloneChildRecordNamePicklist.valueWithClonedAndDate
+    );
+
+    System.debug(clonedAcc2WithManyChildren);
   }
 
   @IsTest
@@ -57,28 +104,28 @@ private class RecordCloneHandlerTest {
       Account.sObjectType.getDescribe()
     );
 
-    List<sObject> withNullRecordIds = RecordCloneHandler.getOriginalRecords(
+    List<CloneQueryResult> withNullRecordIds = RecordCloneHandler.getOriginalRecords(
       null,
       accSummary
     );
     System.assertEquals(withNullRecordIds, null);
-    List<sObject> withEmptyRecordIds = RecordCloneHandler.getOriginalRecords(
+    List<CloneQueryResult> withEmptyRecordIds = RecordCloneHandler.getOriginalRecords(
       new List<Id>(),
       accSummary
     );
     System.assertEquals(withEmptyRecordIds, null);
-    List<sObject> withInvalidRecordIds = RecordCloneHandler.getOriginalRecords(
+    List<CloneQueryResult> withInvalidRecordIds = RecordCloneHandler.getOriginalRecords(
       conIds,
       accSummary
     );
     System.assertNotEquals(withInvalidRecordIds, null);
     System.assertEquals(withInvalidRecordIds.size(), 0);
-    List<sObject> withNullSummary = RecordCloneHandler.getOriginalRecords(
+    List<CloneQueryResult> withNullSummary = RecordCloneHandler.getOriginalRecords(
       accIds,
       null
     );
     System.assertEquals(withNullSummary, null);
-    List<sObject> withCorrectRecordId = RecordCloneHandler.getOriginalRecords(
+    List<CloneQueryResult> withCorrectRecordId = RecordCloneHandler.getOriginalRecords(
       accIds,
       accSummary
     );
@@ -121,9 +168,17 @@ private class RecordCloneHandlerTest {
       'StageName'
     );
 
+    Map<String, List<sObject>> accChildren = new Map<String, List<sObject>>{
+      'Contacts' => new List<sObject>{ con }
+    };
+    Map<String, List<sObject>> oppChildren = new Map<String, List<sObject>>{
+      'OpportunityContactRoles' => new List<sObject>{ ocr }
+    };
+
     // no child, no excluded
     sObject cloned1 = RecordCloneHandler.cloneRecord(
       acc,
+      accChildren,
       accSummary1,
       newRecordName,
       RecordCloneChildRecordNamePicklist.valueWithClonedAndDate
@@ -138,6 +193,7 @@ private class RecordCloneHandlerTest {
     );
     sObject cloned2 = RecordCloneHandler.cloneRecord(
       acc,
+      accChildren,
       accSummary2,
       newRecordName,
       RecordCloneChildRecordNamePicklist.valueWithCloned
@@ -148,6 +204,7 @@ private class RecordCloneHandlerTest {
     accSummary1.isNamable = false;
     sObject notNamable = RecordCloneHandler.cloneRecord(
       acc,
+      accChildren,
       accSummary1,
       null,
       RecordCloneChildRecordNamePicklist.valueWithClonedAndDate
@@ -157,6 +214,7 @@ private class RecordCloneHandlerTest {
     // with opp and auto created opp contact role
     sObject oppCloned = RecordCloneHandler.cloneRecord(
       opp,
+      oppChildren,
       oppSummary1,
       newRecordName,
       RecordCloneChildRecordNamePicklist.valueOriginalName
@@ -193,15 +251,23 @@ private class RecordCloneHandlerTest {
       Account.sObjectType.getDescribe()
     );
 
-    List<sObject> originals = new List<SObject>();
-    originals.add(acc);
-    originals.add(acc2);
+    List<Id> originals = new List<Id>();
+    originals.add(acc.Id);
+    originals.add(acc2.Id);
 
-    List<sObject> clones = RecordCloneHandler.cloneRecords(
+    // get original records
+    List<CloneQueryResult> cloneQueryResults = RecordCloneHandler.getOriginalRecords(
       originals,
       accSummary1
     );
-    System.assertNotEquals(clones, null);
-    System.assertEquals(clones.size(), 2);
+
+    // exec clone
+    List<sObject> cloneds = RecordCloneHandler.cloneRecords(
+      cloneQueryResults,
+      accSummary1
+    );
+
+    System.assertNotEquals(cloneds, null);
+    System.assertEquals(cloneds.size(), 2);
   }
 }
