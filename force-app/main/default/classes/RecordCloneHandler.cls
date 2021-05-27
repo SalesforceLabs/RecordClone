@@ -94,13 +94,27 @@ public with sharing class RecordCloneHandler {
           continue;
         }
 
-        sObject[] children;
+        List<sObject> children;
         try {
-          children = cloned.getSObjects(childRelName);
+          try {
+            // System.QueryException: Aggregate query has too many rows for direct assignment, use FOR loop
+            // https://www.kineticgrowth.com/system-queryexception-aggregate-query-many-rows-direct-assignment-use-loop/
+            // https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/langCon_apex_loops_for_SOQL.htm
+            // There are weird cases.
+            // https://developer.salesforce.com/forums/?id=906F0000000AtTyIAK
+            children = cloned.getSObjects(childRelName);
+          } catch (System.QueryException qe) {
+            System.debug('QueryException. Now try using for loop.');
+            children = new List<sObject>();
+            for (sObject child : cloned.getSObjects(childRelName)) {
+              children.add(child);
+            }
+          }
         } catch (System.SObjectException e) {
+          System.debug('SObjectException');
           continue;
         }
-        if (children == null) {
+        if (children == null || children.size() == 0) {
           continue;
         }
 
@@ -180,12 +194,33 @@ public with sharing class RecordCloneHandler {
     List<sObject> clonings,
     sObjectSummary sObjectSummary
   ) {
+    // append to child records' name fields
+    String todayStr = Datetime.now().format('yyyy/MM/dd HH:mm');
     for (sObject cloning : clonings) {
       cloning.Id = null;
       if (sObjectSummary.isNamable) {
         // Parent record name
         // use sObject parentRecordNameFormat or specify custom record name inputted by user.
         // cloning.put(sObjectSummary.nameField, newRecordName);
+
+        if (sObjectSummary.isNamable) {
+          String originalRecordName = (String) cloning.get(
+            sObjectSummary.nameField
+          );
+          String nameValue = originalRecordName;
+          if (
+            sObjectSummary.childRecordNameFormat ==
+            RecordCloneChildRecordNamePicklist.valueWithCloned
+          ) {
+            nameValue = 'Cloned - ' + originalRecordName;
+          } else if (
+            sObjectSummary.childRecordNameFormat ==
+            RecordCloneChildRecordNamePicklist.valueWithClonedAndDate
+          ) {
+            nameValue = 'Cloned - ' + originalRecordName + ' - ' + todayStr;
+          }
+          cloning.put(sObjectSummary.nameField, nameValue);
+        }
       }
     }
 
@@ -195,9 +230,6 @@ public with sharing class RecordCloneHandler {
       sObjectSummary.children != null &&
       sObjectSummary.children.keySet().size() > 0
     ) {
-      // append to child records' name fields
-      String todayStr = Datetime.now().format('yyyy/MM/dd HH:mm');
-
       // remove child record IDs, assign then cloned parent record Id to ref field
       List<sObject> childrens = new List<sObject>();
       List<Id> ocrIds = new List<Id>();
