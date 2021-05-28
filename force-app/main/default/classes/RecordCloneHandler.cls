@@ -111,7 +111,30 @@ public with sharing class RecordCloneHandler {
       for (String childRelName : parentSummary.children.keySet()) {
         sObjectSummary child = parentSummary.children.get(childRelName);
         List<String> childFields = child.filterClonableFields();
-        childFields.add(child.parentRelationshipField);
+
+        List<String> parentRelFieldNameArr = child.parentRelationshipField.split(
+          '__'
+        );
+        System.debug(child.parentRelationshipField + ' ' + parentRelFieldNameArr.size());
+        if (parentRelFieldNameArr.size() > 2) {
+          // with name space.
+          Boolean hasMatched = false;
+          for (String childField : childFields) {
+            System.debug(childField + ' vs ' + parentRelFieldNameArr[1] + parentRelFieldNameArr[2]);
+            if (
+              childField == child.parentRelationshipField ||
+              childField == parentRelFieldNameArr[1] + '__' + parentRelFieldNameArr[2]
+            ) {
+              hasMatched = true;
+            }
+          }
+
+          if(!hasMatched) {
+            childFields.add(child.parentRelationshipField);
+          }
+        } else {
+          childFields.add(child.parentRelationshipField);
+        }
         childFields = new List<String>(new Set<String>(childFields));
         if (child.isClonable && childFields.size() > 0) {
           String q =
@@ -288,12 +311,6 @@ public with sharing class RecordCloneHandler {
     // insert parent records
     insert parents;
 
-    // create a map matching old and new ids;
-    Map<Id, Id> idMap = new Map<Id, Id>();
-    for (Integer i = 0; i < parents.size(); i++) {
-      idMap.put(oldIds[i], parents[i].Id);
-    }
-
     if (
       sObjectSummary.children != null &&
       sObjectSummary.children.keySet().size() > 0
@@ -310,50 +327,47 @@ public with sharing class RecordCloneHandler {
         }
 
         for (CloneQueryResult result : results) {
-          for (String oldParentId : result.childrens.keySet()) {
-            List<sObject> children = result.childrens.get(childRelName);
-            if (children == null) {
-              continue;
-            }
-            Id newId = idMap.get(oldParentId);
-            // On creating an opportunity record, system automatically creates an OpportunityContactRole record.
-            // Delete the created record as of now.
-            if (
-              sObjectSummary.apiName == 'Opportunity' &&
-              childRelName == 'OpportunityContactRoles'
-            ) {
-              ocrIsDeletable = sObjectSummary.isDeletable;
-              ocrIds.add(newId);
-            }
-
-            for (Integer i = 0; i < children.size(); i++) {
-              children[i].put('Id', null);
-              if (childSummary.isNamable) {
-                String originalRecordName = (String) children[i]
-                  .get(childSummary.nameField);
-                String nameValue = originalRecordName;
-                if (
-                  sObjectSummary.childRecordNameFormat ==
-                  RecordCloneChildRecordNamePicklist.valueWithCloned
-                ) {
-                  nameValue = 'Cloned - ' + originalRecordName;
-                } else if (
-                  sObjectSummary.childRecordNameFormat ==
-                  RecordCloneChildRecordNamePicklist.valueWithClonedAndDate
-                ) {
-                  nameValue =
-                    'Cloned - ' +
-                    originalRecordName +
-                    ' - ' +
-                    todayStr;
-                }
-                children[i].put(childSummary.nameField, nameValue);
-              }
-
-              children[i].put(childSummary.parentRelationshipField, newId);
-            }
-            childrens.addAll(children);
+          if (result.childrens == null) {
+            continue;
           }
+          List<sObject> children = result.childrens.get(childRelName);
+          if (children == null) {
+            continue;
+          }
+          // On creating an opportunity record, system automatically creates an OpportunityContactRole record.
+          // Delete the created record as of now.
+          if (
+            sObjectSummary.apiName == 'Opportunity' &&
+            childRelName == 'OpportunityContactRoles'
+          ) {
+            ocrIsDeletable = sObjectSummary.isDeletable;
+            ocrIds.add(result.parent.Id);
+          }
+
+          for (Integer i = 0; i < children.size(); i++) {
+            children[i].put('Id', null);
+            if (childSummary.isNamable) {
+              String originalRecordName = (String) children[i]
+                .get(childSummary.nameField);
+              String nameValue = originalRecordName;
+              if (
+                sObjectSummary.childRecordNameFormat ==
+                RecordCloneChildRecordNamePicklist.valueWithCloned
+              ) {
+                nameValue = 'Cloned - ' + originalRecordName;
+              } else if (
+                sObjectSummary.childRecordNameFormat ==
+                RecordCloneChildRecordNamePicklist.valueWithClonedAndDate
+              ) {
+                nameValue = 'Cloned - ' + originalRecordName + ' - ' + todayStr;
+              }
+              children[i].put(childSummary.nameField, nameValue);
+            }
+
+            children[i]
+              .put(childSummary.parentRelationshipField, result.parent.Id);
+          }
+          childrens.addAll(children);
         }
       }
 
@@ -371,7 +385,9 @@ public with sharing class RecordCloneHandler {
         }
       }
 
-      insert childrens;
+      if (childrens.size() > 0) {
+        insert childrens;
+      }
     }
 
     return parents;

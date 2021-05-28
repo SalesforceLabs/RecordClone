@@ -25,12 +25,12 @@
         <ul class="details-item-elements">
           <template for:each={okItems} for:item="ok">
             <li key={ok.apiName}>
-              {ok.label} (<span class="apiname">{ok.apiName}</span>)
+              {ok.label} (<span class="apiname">{ok.parentRelationshipField}</span>)
             </li>
           </template>
           <template for:each={ngItems} for:item="ng">
             <li key={ng.apiName}>
-              <del>{ng.label} (<span class="apiname">{ng.apiName}</span>)</del> :
+              <del>{ng.label} (<span class="apiname">{ng.parentRelationshipField}</span>)</del> :
               <span class="ncf-reason">{ng.errorMessage}</span>
             </li>
           </template>

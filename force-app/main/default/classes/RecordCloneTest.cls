@@ -349,16 +349,25 @@ private class RecordCloneTest {
     );
     System.assertNotEquals(noYesNoCloned1, null);
     System.assertNotEquals(noYesNoCloned1.Id, null);
+
+    sObject noYesNoCloned1Queried = [
+      SELECT Id, (SELECT Id FROM CaseContactRoles), (SELECT Id FROM Cases)
+      FROM Case
+      WHERE Id = :noYesNoCloned1.Id
+    ];
     System.assertNotEquals(
-      noYesNoCloned1.getSObjects('CaseContactRoles'),
+      noYesNoCloned1Queried.getSObjects('CaseContactRoles'),
       null
     );
     System.assertNotEquals(
-      noYesNoCloned1.getSObjects('CaseContactRoles').size(),
+      noYesNoCloned1Queried.getSObjects('CaseContactRoles').size(),
       0
     );
-    System.assertNotEquals(noYesNoCloned1.getSObjects('Cases'), null);
-    System.assertNotEquals(noYesNoCloned1.getSObjects('Cases').size(), 0);
+    System.assertNotEquals(noYesNoCloned1Queried.getSObjects('Cases'), null);
+    System.assertNotEquals(
+      noYesNoCloned1Queried.getSObjects('Cases').size(),
+      0
+    );
 
     sObject yesYesNoCloned1 = RecordCloneController.execClone(
       a.Id,
@@ -367,12 +376,18 @@ private class RecordCloneTest {
       null,
       RecordCloneChildRecordNamePicklist.valueWithClonedAndDate
     );
+
+    sObject yesYesNoCloned1Queried = [
+      SELECT Id, (SELECT Id FROM Contacts), (SELECT Id FROM Cases)
+      FROM Account
+      WHERE Id = :yesYesNoCloned1.Id
+    ];
     System.assertNotEquals(yesYesNoCloned1, null);
     System.assertNotEquals(yesYesNoCloned1.Id, null);
-    System.assertNotEquals(yesYesNoCloned1.getSObjects('Cases'), null);
-    System.assertNotEquals(yesYesNoCloned1.getSObjects('Cases').size(), 0);
-    System.assertNotEquals(yesYesNoCloned1.getSObjects('Contacts'), null);
-    System.assertNotEquals(yesYesNoCloned1.getSObjects('Contacts').size(), 0);
+    System.assertNotEquals(yesYesNoCloned1Queried.getSObjects('Cases'), null);
+    System.assertNotEquals(yesYesNoCloned1Queried.getSObjects('Cases').size(), 0);
+    System.assertNotEquals(yesYesNoCloned1Queried.getSObjects('Contacts'), null);
+    System.assertNotEquals(yesYesNoCloned1Queried.getSObjects('Contacts').size(), 0);
 
     sObject yesYesNoCloned2 = RecordCloneController.execClone(
       a.Id,
@@ -381,15 +396,20 @@ private class RecordCloneTest {
       '',
       RecordCloneChildRecordNamePicklist.valueWithCloned
     );
+    sObject yesYesNoCloned2Queried = [
+      SELECT Id, (SELECT Id FROM Opportunities), (SELECT Id FROM Contacts)
+      FROM Account
+      WHERE Id = :yesYesNoCloned2.Id
+    ];
     System.assertNotEquals(yesYesNoCloned2, null);
     System.assertNotEquals(yesYesNoCloned2.Id, null);
-    System.assertNotEquals(yesYesNoCloned2.getSObjects('Opportunities'), null);
+    System.assertNotEquals(yesYesNoCloned2Queried.getSObjects('Opportunities'), null);
     System.assertNotEquals(
-      yesYesNoCloned2.getSObjects('Opportunities').size(),
+      yesYesNoCloned2Queried.getSObjects('Opportunities').size(),
       0
     );
-    System.assertNotEquals(yesYesNoCloned2.getSObjects('Contacts'), null);
-    System.assertNotEquals(yesYesNoCloned2.getSObjects('Contacts').size(), 0);
+    System.assertNotEquals(yesYesNoCloned2Queried.getSObjects('Contacts'), null);
+    System.assertNotEquals(yesYesNoCloned2Queried.getSObjects('Contacts').size(), 0);
 
     // without relationship, with excludedFields
     sObject noNoYesCloned1 = RecordCloneController.execClone(
@@ -436,22 +456,22 @@ private class RecordCloneTest {
     System.assertNotEquals(noYesYesCloned1, null);
     System.assertNotEquals(noYesYesCloned1.Id, null);
     Case checkNoYesYesCloned1 = [
-      SELECT AccountId, ClosedDate
+      SELECT AccountId, ClosedDate, (SELECT Id FROM CaseContactRoles), (SELECT Id FROM Cases)
       FROM Case
       WHERE Id = :noYesYesCloned1.Id
     ];
     System.assertEquals(checkNoYesYesCloned1.AccountId, null);
     System.assertEquals(checkNoYesYesCloned1.ClosedDate, null);
     System.assertNotEquals(
-      noYesYesCloned1.getSObjects('CaseContactRoles'),
+      checkNoYesYesCloned1.getSObjects('CaseContactRoles'),
       null
     );
     System.assertNotEquals(
-      noYesYesCloned1.getSObjects('CaseContactRoles').size(),
+      checkNoYesYesCloned1.getSObjects('CaseContactRoles').size(),
       0
     );
-    System.assertNotEquals(noYesYesCloned1.getSObjects('Cases'), null);
-    System.assertNotEquals(noYesYesCloned1.getSObjects('Cases').size(), 0);
+    System.assertNotEquals(checkNoYesYesCloned1.getSObjects('Cases'), null);
+    System.assertNotEquals(checkNoYesYesCloned1.getSObjects('Cases').size(), 0);
 
     sObject withNullChildRecordName = RecordCloneController.execClone(
       a.Id,
@@ -460,11 +480,16 @@ private class RecordCloneTest {
       'AccountId, SourceId, SuppliedCompany, CreatedDate, CreatedById, LastModifiedDate, LastModifiedById',
       null
     );
+    sObject withNullChildRecordNameQueried = [
+      SELECT Id, (SELECT Id FROM Cases)
+      FROM Account
+      WHERE Id = :withNullChildRecordName.Id
+    ];
     System.assertNotEquals(withNullChildRecordName, null);
     System.assertNotEquals(withNullChildRecordName.Id, null);
-    System.assertNotEquals(withNullChildRecordName.getSObjects('Cases'), null);
+    System.assertNotEquals(withNullChildRecordNameQueried.getSObjects('Cases'), null);
     System.assertNotEquals(
-      withNullChildRecordName.getSObjects('Cases').size(),
+      withNullChildRecordNameQueried.getSObjects('Cases').size(),
       0
     );
 
@@ -475,22 +500,27 @@ private class RecordCloneTest {
       '',
       RecordCloneChildRecordNamePicklist.valueWithClonedAndDate
     );
+    sObject oppExceptionalQueried = [
+      SELECT Id, (SELECT Id FROM OpportunityContactRoles), (SELECT Id FROM OpportunityLineItems)
+      FROM Opportunity
+      WHERE Id = :oppExceptional.Id
+    ];
     System.assertNotEquals(oppExceptional, null);
     System.assertNotEquals(oppExceptional.Id, null);
     System.assertNotEquals(
-      oppExceptional.getSObjects('OpportunityContactRoles'),
+      oppExceptionalQueried.getSObjects('OpportunityContactRoles'),
       null
     );
     System.assertNotEquals(
-      oppExceptional.getSObjects('OpportunityContactRoles').size(),
+      oppExceptionalQueried.getSObjects('OpportunityContactRoles').size(),
       0
     );
     System.assertNotEquals(
-      oppExceptional.getSObjects('OpportunityLineItems'),
+      oppExceptionalQueried.getSObjects('OpportunityLineItems'),
       null
     );
     System.assertNotEquals(
-      oppExceptional.getSObjects('OpportunityLineItems').size(),
+      oppExceptionalQueried.getSObjects('OpportunityLineItems').size(),
       0
     );
   }
@@ -566,17 +596,27 @@ private class RecordCloneTest {
     caseIds.add(c3.Id);
     List<Id> oppIds = new List<Id>();
     oppIds.add(o.Id);
-    List<List<Id>> forInvocable = new List<List<Id>>();
-    forInvocable.add(caseIds);
-    forInvocable.add(oppIds);
+    List<List<Id>> forInvocable1 = new List<List<Id>>();
+    forInvocable1.add(caseIds);
+    List<List<Id>> forInvocable2 = new List<List<Id>>();
+    forInvocable2.add(caseIds);
+    forInvocable2.add(oppIds);
 
-    List<List<Id>> clonedMultiple = RecordCloneController.clone(forInvocable);
+    List<List<Id>> clonedMultiple1 = RecordCloneController.clone(forInvocable1);
+    System.assertNotEquals(clonedMultiple1, null);
+    System.assertNotEquals(clonedMultiple1.size(), 0);
+    System.assertNotEquals(clonedMultiple1[0], null);
+    System.assertNotEquals(clonedMultiple1[0].size(), 0);
+    System.assertNotEquals(clonedMultiple1[0][0], null);
 
-    System.assertNotEquals(clonedMultiple, null);
-    System.assertNotEquals(clonedMultiple.size(), 0);
-    System.assertNotEquals(clonedMultiple[0],null);
-    System.assertNotEquals(clonedMultiple[0].size(),0);
-    System.assertNotEquals(clonedMultiple[0][0],null);
+
+    List<List<Id>> clonedMultiple2 = RecordCloneController.clone(forInvocable2);
+
+    System.assertNotEquals(clonedMultiple2, null);
+    System.assertNotEquals(clonedMultiple2.size(), 0);
+    System.assertNotEquals(clonedMultiple2[0], null);
+    System.assertNotEquals(clonedMultiple2[0].size(), 0);
+    System.assertNotEquals(clonedMultiple2[0][0], null);
   }
 
   @IsTest
@@ -586,25 +626,37 @@ private class RecordCloneTest {
     insert c;
 
     // Debug
-    RecordCloneDebugController.RecordCloneDebugSummary summary1 = RecordCloneDebugController.showAllChildRelationships(null, 'Account');
+    RecordCloneDebugController.RecordCloneDebugSummary summary1 = RecordCloneDebugController.showAllChildRelationships(
+      null,
+      'Account'
+    );
     System.assertNotEquals(summary1, null);
     System.assertEquals(summary1.objectName, 'Account');
     System.assertNotEquals(summary1.relations, null);
     System.assertNotEquals(summary1.relations.size(), 0);
 
-    RecordCloneDebugController.RecordCloneDebugSummary summary2 = RecordCloneDebugController.showAllChildRelationships(c.Id, null);
+    RecordCloneDebugController.RecordCloneDebugSummary summary2 = RecordCloneDebugController.showAllChildRelationships(
+      c.Id,
+      null
+    );
     System.assertNotEquals(summary2, null);
     System.assertEquals(summary2.objectName, 'Case');
     System.assertNotEquals(summary2.relations, null);
     System.assertNotEquals(summary2.relations.size(), 0);
 
-    RecordCloneDebugController.RecordCloneDebugSummary summary3 = RecordCloneDebugController.showAllChildRelationships(c.Id, 'Account');
+    RecordCloneDebugController.RecordCloneDebugSummary summary3 = RecordCloneDebugController.showAllChildRelationships(
+      c.Id,
+      'Account'
+    );
     System.assertNotEquals(summary3, null);
     System.assertEquals(summary3.objectName, 'Account');
     System.assertNotEquals(summary3.relations, null);
     System.assertNotEquals(summary3.relations.size(), 0);
 
-    RecordCloneDebugController.RecordCloneDebugSummary summary4 = RecordCloneDebugController.showAllChildRelationships(null, null);
+    RecordCloneDebugController.RecordCloneDebugSummary summary4 = RecordCloneDebugController.showAllChildRelationships(
+      null,
+      null
+    );
     System.assertEquals(summary4, null);
 
     RecordCloneDebugController.RecordCloneDebugSummary summary5 = RecordCloneDebugController.showAllChildRelationships(
@@ -616,7 +668,10 @@ private class RecordCloneTest {
     System.assertNotEquals(summary5.relations, null);
     System.assertNotEquals(summary5.relations.size(), 0);
 
-    RecordCloneDebugController.RecordCloneDebugSummary summary6 = RecordCloneDebugController.showAllChildRelationships(null, 'abcdefg');
+    RecordCloneDebugController.RecordCloneDebugSummary summary6 = RecordCloneDebugController.showAllChildRelationships(
+      null,
+      'abcdefg'
+    );
     System.assertEquals(summary6, null);
   }
 }
