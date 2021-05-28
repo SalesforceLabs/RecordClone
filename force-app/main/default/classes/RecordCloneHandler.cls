@@ -115,21 +115,20 @@ public with sharing class RecordCloneHandler {
         List<String> parentRelFieldNameArr = child.parentRelationshipField.split(
           '__'
         );
-        System.debug(child.parentRelationshipField + ' ' + parentRelFieldNameArr.size());
         if (parentRelFieldNameArr.size() > 2) {
           // with name space.
           Boolean hasMatched = false;
           for (String childField : childFields) {
-            System.debug(childField + ' vs ' + parentRelFieldNameArr[1] + parentRelFieldNameArr[2]);
             if (
               childField == child.parentRelationshipField ||
-              childField == parentRelFieldNameArr[1] + '__' + parentRelFieldNameArr[2]
+              childField ==
+              parentRelFieldNameArr[1] + '__' + parentRelFieldNameArr[2]
             ) {
               hasMatched = true;
             }
           }
 
-          if(!hasMatched) {
+          if (!hasMatched) {
             childFields.add(child.parentRelationshipField);
           }
         } else {
@@ -258,8 +257,6 @@ public with sharing class RecordCloneHandler {
           children[i].put(childSummary.parentRelationshipField, cloned.Id);
         }
         insert children;
-
-        System.debug(childSummary.apiName + ' : ' + children.size());
       }
     }
 

@@ -82,8 +82,6 @@ private class RecordCloneHandlerTest {
       'hello',
       RecordCloneChildRecordNamePicklist.valueWithClonedAndDate
     );
-
-    System.debug(clonedAcc2WithManyChildren);
   }
 
   @IsTest
