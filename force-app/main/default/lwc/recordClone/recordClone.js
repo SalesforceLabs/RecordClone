@@ -23,6 +23,7 @@ export default class RecordClone extends NavigationMixin(LightningElement) {
   @api childRelationshipNames = "";
   @api childRecordNameType = "";
   @api targetRecordId;
+  @track _targetRecordId;
 
   nameField;
   objectName;
@@ -43,7 +44,7 @@ export default class RecordClone extends NavigationMixin(LightningElement) {
   }
 
   @wire(getSObjectSummary, {
-    recordId: "$targetRecordId",
+    recordId: "$_targetRecordId",
     childRelationshipNames: "$childRelationshipNames",
     excludedFieldNames: "$excludedFieldNames"
   })
@@ -58,7 +59,7 @@ export default class RecordClone extends NavigationMixin(LightningElement) {
   }
 
   @wire(getNameFieldValue, {
-    recordId: "$targetRecordId",
+    recordId: "$_targetRecordId",
     objectName: "$objectName",
     nameField: "$nameField"
   })
@@ -73,10 +74,13 @@ export default class RecordClone extends NavigationMixin(LightningElement) {
   }
 
   connectedCallback() {
-    this.targetRecordId = this.templateRecordId
-      ? this.templateRecordId
-      : this.recordId;
-    if (!this.targetRecordId) {
+    // In unmanaged package (OSS version), this component might be used as a child comp,
+    // in which targetRecordId public prop can be used to pass the target record Id.
+    // If it's not set, then it refers to templateRecordId set through the builder UI,
+    // and finally recordId prop is refered if none of above is set.
+    this._targetRecordId =
+      this.targetRecordId || this.templateRecordId || this.recordId || "";
+    if (!this._targetRecordId) {
       this.showErrorToast(`There is no available Record Id`);
     }
   }
