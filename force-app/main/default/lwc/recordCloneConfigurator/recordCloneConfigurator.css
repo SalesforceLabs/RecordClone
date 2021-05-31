@@ -5,13 +5,13 @@
   For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause 
 */
 .title {
-    font-size: 1.1rem;
-    font-weight: bold;
+  font-size: 1.1rem;
+  font-weight: bold;
 }
 .section {
-    margin: .5rem 0;
+  margin: 0.5rem 0;
 }
 .section-title {
-    font-weight: bold;
-    border-bottom: 1px solid #dadada;
+  font-weight: bold;
+  border-bottom: 1px solid #dadada;
 }

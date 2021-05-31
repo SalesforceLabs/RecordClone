@@ -1,417 +1,416 @@
 {
-    "apiName": "Opportunity",
-    "children": [
-      {
-        "apiName": "Sample",
-        "errorMessage": "",
-        "fields": [
-          {
-            "apiName": "OpportunityId",
-            "errorMessage": "",
-            "isClonable": false,
-            "label": "商談 ID"
-          }
-        ],
-        "isClonable": false,
-        "isNamable": false,
-        "label": "Sample",
-        "parentRelationshipField": "OpportunityId"
-      },
-      {
-        "apiName": "OpportunityLineItem",
-        "errorMessage": "",
-        "fields": [
-          {
-            "apiName": "OpportunityId",
-            "errorMessage": "",
-            "isClonable": true,
-            "label": "商談 ID"
-          },
-          {
-            "apiName": "SortOrder",
-            "errorMessage": "",
-            "isClonable": true,
-            "label": "並び替え順"
-          },
-          {
-            "apiName": "PricebookEntryId",
-            "errorMessage": "",
-            "isClonable": true,
-            "label": "価格表エントリ ID"
-          },
-          {
-            "apiName": "Product2Id",
-            "errorMessage": "",
-            "isClonable": true,
-            "label": "商品 ID"
-          },
-          {
-            "apiName": "ProductCode",
-            "errorMessage": "NOT_CREATEABLE",
-            "isClonable": false,
-            "label": "商品コード"
-          },
-          {
-            "apiName": "Name",
-            "errorMessage": "NOT_CREATEABLE",
-            "isClonable": false,
-            "label": "商談商品名"
-          },
-          {
-            "apiName": "Quantity",
-            "errorMessage": "",
-            "isClonable": true,
-            "label": "数量"
-          },
-          {
-            "apiName": "Discount",
-            "errorMessage": "NOT_ACCESSIBLE,NOT_CREATEABLE",
-            "isClonable": false,
-            "label": "割引"
-          },
-          {
-            "apiName": "Subtotal",
-            "errorMessage": "NOT_ACCESSIBLE,NOT_CREATEABLE",
-            "isClonable": false,
-            "label": "小計"
-          },
-          {
-            "apiName": "TotalPrice",
-            "errorMessage": "OPP_LINE_ITEM",
-            "isClonable": false,
-            "label": "合計金額"
-          },
-          {
-            "apiName": "UnitPrice",
-            "errorMessage": "",
-            "isClonable": true,
-            "label": "販売価格"
-          },
-          {
-            "apiName": "ListPrice",
-            "errorMessage": "NOT_CREATEABLE",
-            "isClonable": false,
-            "label": "リスト価格"
-          },
-          {
-            "apiName": "ServiceDate",
-            "errorMessage": "",
-            "isClonable": true,
-            "label": "提供日"
-          },
-          {
-            "apiName": "Description",
-            "errorMessage": "",
-            "isClonable": true,
-            "label": "明細説明"
-          },
-          {
-            "apiName": "CreatedDate",
-            "errorMessage": "NOT_CREATEABLE,IS_EXCLUDED",
-            "isClonable": false,
-            "label": "作成日"
-          },
-          {
-            "apiName": "CreatedById",
-            "errorMessage": "NOT_CREATEABLE,IS_EXCLUDED",
-            "isClonable": false,
-            "label": "作成者 ID"
-          },
-          {
-            "apiName": "LastModifiedDate",
-            "errorMessage": "NOT_CREATEABLE,IS_EXCLUDED",
-            "isClonable": false,
-            "label": "最終更新日"
-          },
-          {
-            "apiName": "LastModifiedById",
-            "errorMessage": "NOT_CREATEABLE,IS_EXCLUDED",
-            "isClonable": false,
-            "label": "最終更新者 ID"
-          },
-          {
-            "apiName": "SystemModstamp",
-            "errorMessage": "NOT_CREATEABLE",
-            "isClonable": false,
-            "label": "System Modstamp"
-          },
-          {
-            "apiName": "IsDeleted",
-            "errorMessage": "NOT_CREATEABLE",
-            "isClonable": false,
-            "label": "削除"
-          }
-        ],
-        "isClonable": true,
-        "isNamable": false,
-        "label": "商談商品",
-        "parentRelationshipField": "OpportunityId"
-      }
-    ],
-    "errorMessage": "",
-    "fields": [
-      {
-        "apiName": "IsDeleted",
-        "errorMessage": "NOT_CREATEABLE",
-        "isClonable": false,
-        "label": "削除"
-      },
-      {
-        "apiName": "AccountId",
-        "errorMessage": "",
-        "isClonable": true,
-        "label": "取引先 ID"
-      },
-      {
-        "apiName": "IsPrivate",
-        "errorMessage": "",
-        "isClonable": true,
-        "label": "非公開"
-      },
-      {
-        "apiName": "Name",
-        "errorMessage": "",
-        "isClonable": true,
-        "label": "商談名"
-      },
-      {
-        "apiName": "Description",
-        "errorMessage": "",
-        "isClonable": true,
-        "label": "説明"
-      },
-      {
-        "apiName": "StageName",
-        "errorMessage": "",
-        "isClonable": true,
-        "label": "フェーズ"
-      },
-      {
-        "apiName": "Amount",
-        "errorMessage": "",
-        "isClonable": true,
-        "label": "金額"
-      },
-      {
-        "apiName": "Probability",
-        "errorMessage": "",
-        "isClonable": true,
-        "label": "確度(%)"
-      },
-      {
-        "apiName": "ExpectedRevenue",
-        "errorMessage": "NOT_CREATEABLE",
-        "isClonable": false,
-        "label": "期待収益"
-      },
-      {
-        "apiName": "TotalOpportunityQuantity",
-        "errorMessage": "",
-        "isClonable": true,
-        "label": "数量"
-      },
-      {
-        "apiName": "CloseDate",
-        "errorMessage": "",
-        "isClonable": true,
-        "label": "完了予定日"
-      },
-      {
-        "apiName": "Type",
-        "errorMessage": "IS_EXCLUDED",
-        "isClonable": false,
-        "label": "商談 種別"
-      },
-      {
-        "apiName": "NextStep",
-        "errorMessage": "",
-        "isClonable": true,
-        "label": "次のステップ"
-      },
-      {
-        "apiName": "LeadSource",
-        "errorMessage": "",
-        "isClonable": true,
-        "label": "リードソース"
-      },
-      {
-        "apiName": "IsClosed",
-        "errorMessage": "NOT_CREATEABLE",
-        "isClonable": false,
-        "label": "完了フラグ"
-      },
-      {
-        "apiName": "IsWon",
-        "errorMessage": "NOT_CREATEABLE",
-        "isClonable": false,
-        "label": "成立フラグ"
-      },
-      {
-        "apiName": "ForecastCategory",
-        "errorMessage": "NOT_CREATEABLE",
-        "isClonable": false,
-        "label": "売上予測分類"
-      },
-      {
-        "apiName": "ForecastCategoryName",
-        "errorMessage": "",
-        "isClonable": true,
-        "label": "売上予測分類"
-      },
-      {
-        "apiName": "CampaignId",
-        "errorMessage": "",
-        "isClonable": true,
-        "label": "キャンペーン ID"
-      },
-      {
-        "apiName": "HasOpportunityLineItem",
-        "errorMessage": "NOT_CREATEABLE",
-        "isClonable": false,
-        "label": "商品フラグ"
-      },
-      {
-        "apiName": "Pricebook2Id",
-        "errorMessage": "",
-        "isClonable": true,
-        "label": "Price Book ID"
-      },
-      {
-        "apiName": "OwnerId",
-        "errorMessage": "",
-        "isClonable": true,
-        "label": "所有者 ID"
-      },
-      {
-        "apiName": "CreatedDate",
-        "errorMessage": "NOT_CREATEABLE,IS_EXCLUDED",
-        "isClonable": false,
-        "label": "作成日"
-      },
-      {
-        "apiName": "CreatedById",
-        "errorMessage": "NOT_CREATEABLE,IS_EXCLUDED",
-        "isClonable": false,
-        "label": "作成者 ID"
-      },
-      {
-        "apiName": "LastModifiedDate",
-        "errorMessage": "NOT_CREATEABLE,IS_EXCLUDED",
-        "isClonable": false,
-        "label": "最終更新日"
-      },
-      {
-        "apiName": "LastModifiedById",
-        "errorMessage": "NOT_CREATEABLE,IS_EXCLUDED",
-        "isClonable": false,
-        "label": "最終更新者 ID"
-      },
-      {
-        "apiName": "SystemModstamp",
-        "errorMessage": "NOT_CREATEABLE",
-        "isClonable": false,
-        "label": "System Modstamp"
-      },
-      {
-        "apiName": "LastActivityDate",
-        "errorMessage": "NOT_CREATEABLE",
-        "isClonable": false,
-        "label": "最終活動日"
-      },
-      {
-        "apiName": "FiscalQuarter",
-        "errorMessage": "NOT_CREATEABLE",
-        "isClonable": false,
-        "label": "会計四半期"
-      },
-      {
-        "apiName": "FiscalYear",
-        "errorMessage": "NOT_CREATEABLE",
-        "isClonable": false,
-        "label": "会計年度"
-      },
-      {
-        "apiName": "Fiscal",
-        "errorMessage": "NOT_CREATEABLE",
-        "isClonable": false,
-        "label": "会計期間"
-      },
-      {
-        "apiName": "ContactId",
-        "errorMessage": "",
-        "isClonable": true,
-        "label": "取引先責任者 ID"
-      },
-      {
-        "apiName": "LastViewedDate",
-        "errorMessage": "NOT_CREATEABLE",
-        "isClonable": false,
-        "label": "最終閲覧日"
-      },
-      {
-        "apiName": "LastReferencedDate",
-        "errorMessage": "NOT_CREATEABLE",
-        "isClonable": false,
-        "label": "最終参照日"
-      },
-      {
-        "apiName": "ContractId",
-        "errorMessage": "NOT_ACCESSIBLE,NOT_CREATEABLE",
-        "isClonable": false,
-        "label": "契約 ID"
-      },
-      {
-        "apiName": "HasOpenActivity",
-        "errorMessage": "NOT_CREATEABLE",
-        "isClonable": false,
-        "label": "進行中活動があります"
-      },
-      {
-        "apiName": "HasOverdueTask",
-        "errorMessage": "NOT_CREATEABLE",
-        "isClonable": false,
-        "label": "期限切れ ToDo があります"
-      },
-      {
-        "apiName": "IqScore",
-        "errorMessage": "NOT_ACCESSIBLE,NOT_CREATEABLE",
-        "isClonable": false,
-        "label": "スコア"
-      },
-      {
-        "apiName": "DeliveryInstallationStatus__c",
-        "errorMessage": "",
-        "isClonable": true,
-        "label": "Delivery/Installation Status"
-      },
-      {
-        "apiName": "TrackingNumber__c",
-        "errorMessage": "",
-        "isClonable": true,
-        "label": "Tracking Number"
-      },
-      {
-        "apiName": "OrderNumber__c",
-        "errorMessage": "",
-        "isClonable": true,
-        "label": "Order Number"
-      },
-      {
-        "apiName": "CurrentGenerators__c",
-        "errorMessage": "",
-        "isClonable": true,
-        "label": "Current Generator(s)"
-      },
-      {
-        "apiName": "MainCompetitors__c",
-        "errorMessage": "",
-        "isClonable": true,
-        "label": "Main Competitor(s)"
-      }
-    ],
-    "isClonable": false,
-    "isNamable": false,
-    "label": "商談",
-    "nameField": ""
-  }
-  
+  "apiName": "Opportunity",
+  "children": [
+    {
+      "apiName": "Sample",
+      "errorMessage": "",
+      "fields": [
+        {
+          "apiName": "OpportunityId",
+          "errorMessage": "",
+          "isClonable": false,
+          "label": "商談 ID"
+        }
+      ],
+      "isClonable": false,
+      "isNamable": false,
+      "label": "Sample",
+      "parentRelationshipField": "OpportunityId"
+    },
+    {
+      "apiName": "OpportunityLineItem",
+      "errorMessage": "",
+      "fields": [
+        {
+          "apiName": "OpportunityId",
+          "errorMessage": "",
+          "isClonable": true,
+          "label": "商談 ID"
+        },
+        {
+          "apiName": "SortOrder",
+          "errorMessage": "",
+          "isClonable": true,
+          "label": "並び替え順"
+        },
+        {
+          "apiName": "PricebookEntryId",
+          "errorMessage": "",
+          "isClonable": true,
+          "label": "価格表エントリ ID"
+        },
+        {
+          "apiName": "Product2Id",
+          "errorMessage": "",
+          "isClonable": true,
+          "label": "商品 ID"
+        },
+        {
+          "apiName": "ProductCode",
+          "errorMessage": "NOT_CREATEABLE",
+          "isClonable": false,
+          "label": "商品コード"
+        },
+        {
+          "apiName": "Name",
+          "errorMessage": "NOT_CREATEABLE",
+          "isClonable": false,
+          "label": "商談商品名"
+        },
+        {
+          "apiName": "Quantity",
+          "errorMessage": "",
+          "isClonable": true,
+          "label": "数量"
+        },
+        {
+          "apiName": "Discount",
+          "errorMessage": "NOT_ACCESSIBLE,NOT_CREATEABLE",
+          "isClonable": false,
+          "label": "割引"
+        },
+        {
+          "apiName": "Subtotal",
+          "errorMessage": "NOT_ACCESSIBLE,NOT_CREATEABLE",
+          "isClonable": false,
+          "label": "小計"
+        },
+        {
+          "apiName": "TotalPrice",
+          "errorMessage": "OPP_LINE_ITEM",
+          "isClonable": false,
+          "label": "合計金額"
+        },
+        {
+          "apiName": "UnitPrice",
+          "errorMessage": "",
+          "isClonable": true,
+          "label": "販売価格"
+        },
+        {
+          "apiName": "ListPrice",
+          "errorMessage": "NOT_CREATEABLE",
+          "isClonable": false,
+          "label": "リスト価格"
+        },
+        {
+          "apiName": "ServiceDate",
+          "errorMessage": "",
+          "isClonable": true,
+          "label": "提供日"
+        },
+        {
+          "apiName": "Description",
+          "errorMessage": "",
+          "isClonable": true,
+          "label": "明細説明"
+        },
+        {
+          "apiName": "CreatedDate",
+          "errorMessage": "NOT_CREATEABLE,IS_EXCLUDED",
+          "isClonable": false,
+          "label": "作成日"
+        },
+        {
+          "apiName": "CreatedById",
+          "errorMessage": "NOT_CREATEABLE,IS_EXCLUDED",
+          "isClonable": false,
+          "label": "作成者 ID"
+        },
+        {
+          "apiName": "LastModifiedDate",
+          "errorMessage": "NOT_CREATEABLE,IS_EXCLUDED",
+          "isClonable": false,
+          "label": "最終更新日"
+        },
+        {
+          "apiName": "LastModifiedById",
+          "errorMessage": "NOT_CREATEABLE,IS_EXCLUDED",
+          "isClonable": false,
+          "label": "最終更新者 ID"
+        },
+        {
+          "apiName": "SystemModstamp",
+          "errorMessage": "NOT_CREATEABLE",
+          "isClonable": false,
+          "label": "System Modstamp"
+        },
+        {
+          "apiName": "IsDeleted",
+          "errorMessage": "NOT_CREATEABLE",
+          "isClonable": false,
+          "label": "削除"
+        }
+      ],
+      "isClonable": true,
+      "isNamable": false,
+      "label": "商談商品",
+      "parentRelationshipField": "OpportunityId"
+    }
+  ],
+  "errorMessage": "",
+  "fields": [
+    {
+      "apiName": "IsDeleted",
+      "errorMessage": "NOT_CREATEABLE",
+      "isClonable": false,
+      "label": "削除"
+    },
+    {
+      "apiName": "AccountId",
+      "errorMessage": "",
+      "isClonable": true,
+      "label": "取引先 ID"
+    },
+    {
+      "apiName": "IsPrivate",
+      "errorMessage": "",
+      "isClonable": true,
+      "label": "非公開"
+    },
+    {
+      "apiName": "Name",
+      "errorMessage": "",
+      "isClonable": true,
+      "label": "商談名"
+    },
+    {
+      "apiName": "Description",
+      "errorMessage": "",
+      "isClonable": true,
+      "label": "説明"
+    },
+    {
+      "apiName": "StageName",
+      "errorMessage": "",
+      "isClonable": true,
+      "label": "フェーズ"
+    },
+    {
+      "apiName": "Amount",
+      "errorMessage": "",
+      "isClonable": true,
+      "label": "金額"
+    },
+    {
+      "apiName": "Probability",
+      "errorMessage": "",
+      "isClonable": true,
+      "label": "確度(%)"
+    },
+    {
+      "apiName": "ExpectedRevenue",
+      "errorMessage": "NOT_CREATEABLE",
+      "isClonable": false,
+      "label": "期待収益"
+    },
+    {
+      "apiName": "TotalOpportunityQuantity",
+      "errorMessage": "",
+      "isClonable": true,
+      "label": "数量"
+    },
+    {
+      "apiName": "CloseDate",
+      "errorMessage": "",
+      "isClonable": true,
+      "label": "完了予定日"
+    },
+    {
+      "apiName": "Type",
+      "errorMessage": "IS_EXCLUDED",
+      "isClonable": false,
+      "label": "商談 種別"
+    },
+    {
+      "apiName": "NextStep",
+      "errorMessage": "",
+      "isClonable": true,
+      "label": "次のステップ"
+    },
+    {
+      "apiName": "LeadSource",
+      "errorMessage": "",
+      "isClonable": true,
+      "label": "リードソース"
+    },
+    {
+      "apiName": "IsClosed",
+      "errorMessage": "NOT_CREATEABLE",
+      "isClonable": false,
+      "label": "完了フラグ"
+    },
+    {
+      "apiName": "IsWon",
+      "errorMessage": "NOT_CREATEABLE",
+      "isClonable": false,
+      "label": "成立フラグ"
+    },
+    {
+      "apiName": "ForecastCategory",
+      "errorMessage": "NOT_CREATEABLE",
+      "isClonable": false,
+      "label": "売上予測分類"
+    },
+    {
+      "apiName": "ForecastCategoryName",
+      "errorMessage": "",
+      "isClonable": true,
+      "label": "売上予測分類"
+    },
+    {
+      "apiName": "CampaignId",
+      "errorMessage": "",
+      "isClonable": true,
+      "label": "キャンペーン ID"
+    },
+    {
+      "apiName": "HasOpportunityLineItem",
+      "errorMessage": "NOT_CREATEABLE",
+      "isClonable": false,
+      "label": "商品フラグ"
+    },
+    {
+      "apiName": "Pricebook2Id",
+      "errorMessage": "",
+      "isClonable": true,
+      "label": "Price Book ID"
+    },
+    {
+      "apiName": "OwnerId",
+      "errorMessage": "",
+      "isClonable": true,
+      "label": "所有者 ID"
+    },
+    {
+      "apiName": "CreatedDate",
+      "errorMessage": "NOT_CREATEABLE,IS_EXCLUDED",
+      "isClonable": false,
+      "label": "作成日"
+    },
+    {
+      "apiName": "CreatedById",
+      "errorMessage": "NOT_CREATEABLE,IS_EXCLUDED",
+      "isClonable": false,
+      "label": "作成者 ID"
+    },
+    {
+      "apiName": "LastModifiedDate",
+      "errorMessage": "NOT_CREATEABLE,IS_EXCLUDED",
+      "isClonable": false,
+      "label": "最終更新日"
+    },
+    {
+      "apiName": "LastModifiedById",
+      "errorMessage": "NOT_CREATEABLE,IS_EXCLUDED",
+      "isClonable": false,
+      "label": "最終更新者 ID"
+    },
+    {
+      "apiName": "SystemModstamp",
+      "errorMessage": "NOT_CREATEABLE",
+      "isClonable": false,
+      "label": "System Modstamp"
+    },
+    {
+      "apiName": "LastActivityDate",
+      "errorMessage": "NOT_CREATEABLE",
+      "isClonable": false,
+      "label": "最終活動日"
+    },
+    {
+      "apiName": "FiscalQuarter",
+      "errorMessage": "NOT_CREATEABLE",
+      "isClonable": false,
+      "label": "会計四半期"
+    },
+    {
+      "apiName": "FiscalYear",
+      "errorMessage": "NOT_CREATEABLE",
+      "isClonable": false,
+      "label": "会計年度"
+    },
+    {
+      "apiName": "Fiscal",
+      "errorMessage": "NOT_CREATEABLE",
+      "isClonable": false,
+      "label": "会計期間"
+    },
+    {
+      "apiName": "ContactId",
+      "errorMessage": "",
+      "isClonable": true,
+      "label": "取引先責任者 ID"
+    },
+    {
+      "apiName": "LastViewedDate",
+      "errorMessage": "NOT_CREATEABLE",
+      "isClonable": false,
+      "label": "最終閲覧日"
+    },
+    {
+      "apiName": "LastReferencedDate",
+      "errorMessage": "NOT_CREATEABLE",
+      "isClonable": false,
+      "label": "最終参照日"
+    },
+    {
+      "apiName": "ContractId",
+      "errorMessage": "NOT_ACCESSIBLE,NOT_CREATEABLE",
+      "isClonable": false,
+      "label": "契約 ID"
+    },
+    {
+      "apiName": "HasOpenActivity",
+      "errorMessage": "NOT_CREATEABLE",
+      "isClonable": false,
+      "label": "進行中活動があります"
+    },
+    {
+      "apiName": "HasOverdueTask",
+      "errorMessage": "NOT_CREATEABLE",
+      "isClonable": false,
+      "label": "期限切れ ToDo があります"
+    },
+    {
+      "apiName": "IqScore",
+      "errorMessage": "NOT_ACCESSIBLE,NOT_CREATEABLE",
+      "isClonable": false,
+      "label": "スコア"
+    },
+    {
+      "apiName": "DeliveryInstallationStatus__c",
+      "errorMessage": "",
+      "isClonable": true,
+      "label": "Delivery/Installation Status"
+    },
+    {
+      "apiName": "TrackingNumber__c",
+      "errorMessage": "",
+      "isClonable": true,
+      "label": "Tracking Number"
+    },
+    {
+      "apiName": "OrderNumber__c",
+      "errorMessage": "",
+      "isClonable": true,
+      "label": "Order Number"
+    },
+    {
+      "apiName": "CurrentGenerators__c",
+      "errorMessage": "",
+      "isClonable": true,
+      "label": "Current Generator(s)"
+    },
+    {
+      "apiName": "MainCompetitors__c",
+      "errorMessage": "",
+      "isClonable": true,
+      "label": "Main Competitor(s)"
+    }
+  ],
+  "isClonable": false,
+  "isNamable": false,
+  "label": "商談",
+  "nameField": ""
+}

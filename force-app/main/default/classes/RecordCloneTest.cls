@@ -574,9 +574,9 @@ private class RecordCloneTest {
 
     System.assertNotEquals(clonedMultiple, null);
     System.assertNotEquals(clonedMultiple.size(), 0);
-    System.assertNotEquals(clonedMultiple[0],null);
-    System.assertNotEquals(clonedMultiple[0].size(),0);
-    System.assertNotEquals(clonedMultiple[0][0],null);
+    System.assertNotEquals(clonedMultiple[0], null);
+    System.assertNotEquals(clonedMultiple[0].size(), 0);
+    System.assertNotEquals(clonedMultiple[0][0], null);
   }
 
   @IsTest
@@ -586,25 +586,37 @@ private class RecordCloneTest {
     insert c;
 
     // Debug
-    RecordCloneDebugController.RecordCloneDebugSummary summary1 = RecordCloneDebugController.showAllChildRelationships(null, 'Account');
+    RecordCloneDebugController.RecordCloneDebugSummary summary1 = RecordCloneDebugController.showAllChildRelationships(
+      null,
+      'Account'
+    );
     System.assertNotEquals(summary1, null);
     System.assertEquals(summary1.objectName, 'Account');
     System.assertNotEquals(summary1.relations, null);
     System.assertNotEquals(summary1.relations.size(), 0);
 
-    RecordCloneDebugController.RecordCloneDebugSummary summary2 = RecordCloneDebugController.showAllChildRelationships(c.Id, null);
+    RecordCloneDebugController.RecordCloneDebugSummary summary2 = RecordCloneDebugController.showAllChildRelationships(
+      c.Id,
+      null
+    );
     System.assertNotEquals(summary2, null);
     System.assertEquals(summary2.objectName, 'Case');
     System.assertNotEquals(summary2.relations, null);
     System.assertNotEquals(summary2.relations.size(), 0);
 
-    RecordCloneDebugController.RecordCloneDebugSummary summary3 = RecordCloneDebugController.showAllChildRelationships(c.Id, 'Account');
+    RecordCloneDebugController.RecordCloneDebugSummary summary3 = RecordCloneDebugController.showAllChildRelationships(
+      c.Id,
+      'Account'
+    );
     System.assertNotEquals(summary3, null);
     System.assertEquals(summary3.objectName, 'Account');
     System.assertNotEquals(summary3.relations, null);
     System.assertNotEquals(summary3.relations.size(), 0);
 
-    RecordCloneDebugController.RecordCloneDebugSummary summary4 = RecordCloneDebugController.showAllChildRelationships(null, null);
+    RecordCloneDebugController.RecordCloneDebugSummary summary4 = RecordCloneDebugController.showAllChildRelationships(
+      null,
+      null
+    );
     System.assertEquals(summary4, null);
 
     RecordCloneDebugController.RecordCloneDebugSummary summary5 = RecordCloneDebugController.showAllChildRelationships(
@@ -616,7 +628,10 @@ private class RecordCloneTest {
     System.assertNotEquals(summary5.relations, null);
     System.assertNotEquals(summary5.relations.size(), 0);
 
-    RecordCloneDebugController.RecordCloneDebugSummary summary6 = RecordCloneDebugController.showAllChildRelationships(null, 'abcdefg');
+    RecordCloneDebugController.RecordCloneDebugSummary summary6 = RecordCloneDebugController.showAllChildRelationships(
+      null,
+      'abcdefg'
+    );
     System.assertEquals(summary6, null);
   }
 }
