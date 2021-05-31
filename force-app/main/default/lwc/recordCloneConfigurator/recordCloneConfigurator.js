@@ -52,16 +52,16 @@ export default class RecordCloneConfigurator extends LightningElement {
     return this.objectName && this.objectName.length > 0;
   }
 
-  buildErrorMessage = errors => {
+  buildErrorMessage = (errors) => {
     let errorMessage = "";
 
     if (Array.isArray(errors)) {
-      errors.forEach(err => {
+      errors.forEach((err) => {
         errorMessage += `[${err.statusCode}] ${err.message}\n`;
       });
     } else if (errors instanceof Object) {
       for (let key in errors) {
-        if (errors.hasOwnProperty(key)) {
+        if (Object.prototype.hasOwnProperty.call(errors, key)) {
           const errs = errors[key];
           for (let err of errs) {
             errorMessage += `${key} - [${err.statusCode}] ${err.message}\n`;
@@ -72,7 +72,7 @@ export default class RecordCloneConfigurator extends LightningElement {
     return errorMessage;
   };
 
-  handleErrors = errors => {
+  handleErrors = (errors) => {
     let errorMessage = "Unknown error";
     if (errors && errors.body) {
       errorMessage = "";

@@ -64,7 +64,7 @@ describe("c-record-clone", () => {
       is: RecordClone
     });
     document.body.appendChild(element);
-    element.nameInputLabel = "nanikore"
+    element.nameInputLabel = "nanikore";
     getNameFieldValueAdapter.emit("Test Record Name");
     getSObjectSummaryAdapter.emit(sObjectSummarySuccess);
 
@@ -75,13 +75,12 @@ describe("c-record-clone", () => {
     });
   });
 
-
   it("renders not supported", () => {
     const element = createElement("c-record-clone", {
       is: RecordClone
     });
     document.body.appendChild(element);
-    element.nameInputLabel = "nanikore"
+    element.nameInputLabel = "nanikore";
     getNameFieldValueAdapter.emit("Test Record Name");
     getSObjectSummaryAdapter.emit(sObjectSummaryNonSupport);
 
@@ -122,7 +121,7 @@ describe("c-record-clone", () => {
       pageErrors: {
         sampleError: [{ statusCode: 400, message: "error" }]
       },
-      otherCase : "whaaaat"
+      otherCase: "whaaaat"
     });
 
     return Promise.resolve().then(() => {
@@ -145,17 +144,20 @@ describe("c-record-clone", () => {
     getSObjectSummaryAdapter.emit(sObjectSummarySuccess);
     getNameFieldValueAdapter.emit(recordName);
 
-    return Promise.resolve().then(() => {
-      const nameInput = element.shadowRoot.querySelector("lightning-input");
-      expect(nameInput.value).toBe(recordName);
-    }).then(() => {
-      const nameInput = element.shadowRoot.querySelector("lightning-input");
-      nameInput.value = "changed name";
-      nameInput.dispatchEvent(new CustomEvent('change'));
-    }).then(() => {
-      const nameInput = element.shadowRoot.querySelector("lightning-input");
-      expect(nameInput.value).toBe("changed name");
-    });
+    return Promise.resolve()
+      .then(() => {
+        const nameInput = element.shadowRoot.querySelector("lightning-input");
+        expect(nameInput.value).toBe(recordName);
+      })
+      .then(() => {
+        const nameInput = element.shadowRoot.querySelector("lightning-input");
+        nameInput.value = "changed name";
+        nameInput.dispatchEvent(new CustomEvent("change"));
+      })
+      .then(() => {
+        const nameInput = element.shadowRoot.querySelector("lightning-input");
+        expect(nameInput.value).toBe("changed name");
+      });
   });
 
   it("renders error message after initialization done with any error", () => {
@@ -186,7 +188,7 @@ describe("c-record-clone", () => {
       pageErrors: {
         sampleError: [{ statusCode: 400, message: "error" }]
       },
-      otherCase : "whaaaat"
+      otherCase: "whaaaat"
     });
 
     return Promise.resolve().then(() => {
@@ -213,7 +215,9 @@ describe("c-record-clone", () => {
     return Promise.resolve().then(() => {
       expect(handler).toHaveBeenCalled();
       expect(handler.mock.calls[0][0].detail.title).toBe("RecordClone Error");
-      expect(handler.mock.calls[0][0].detail.message).toBe("You can't include more than 20 different child types.");
+      expect(handler.mock.calls[0][0].detail.message).toBe(
+        "You can't include more than 20 different child types."
+      );
       expect(handler.mock.calls[0][0].detail.variant).toBe("error");
     });
   });
@@ -263,9 +267,8 @@ describe("c-record-clone", () => {
 
     return Promise.resolve()
       .then(() => {
-        const cloneButton = element.shadowRoot.querySelector(
-          "lightning-button"
-        );
+        const cloneButton =
+          element.shadowRoot.querySelector("lightning-button");
         cloneButton.click();
       })
       .then(() => {
@@ -294,13 +297,12 @@ describe("c-record-clone", () => {
 
     return Promise.resolve()
       .then(() => {
-        const cloneButton = element.shadowRoot.querySelector(
-          "lightning-button"
-        );
+        const cloneButton =
+          element.shadowRoot.querySelector("lightning-button");
         cloneButton.click();
       })
       .then(() => {
-        expect(() => execClone().toThrow(Error));
+        expect(() => execClone()).toThrow(Error);
       });
   });
 
@@ -323,9 +325,8 @@ describe("c-record-clone", () => {
 
     return Promise.resolve()
       .then(() => {
-        const cloneButton = element.shadowRoot.querySelector(
-          "lightning-button"
-        );
+        const cloneButton =
+          element.shadowRoot.querySelector("lightning-button");
         cloneButton.click();
       })
       .then(() => {
@@ -359,9 +360,8 @@ describe("c-record-clone", () => {
 
     return Promise.resolve()
       .then(() => {
-        const cloneButton = element.shadowRoot.querySelector(
-          "lightning-button"
-        );
+        const cloneButton =
+          element.shadowRoot.querySelector("lightning-button");
         cloneButton.click();
       })
       .then(() => {
@@ -398,7 +398,7 @@ describe("c-record-clone", () => {
         );
         listItemTitle.click();
 
-        expect(listItemTitle.textContent).toBe("Included child objects (1)");        
+        expect(listItemTitle.textContent).toBe("Included child objects (1)");
         expect(listItemTitle).not.toBeUndefined();
         expect(listItemTitle).not.toBeNull();
       })

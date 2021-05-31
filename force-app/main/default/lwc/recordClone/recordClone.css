@@ -5,8 +5,8 @@
   For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause 
 */
 .slds-card__header {
-    padding-top: .75rem;
+  padding-top: 0.75rem;
 }
 .slds-card__footer {
-    padding: 0;
+  padding: 0;
 }

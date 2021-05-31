@@ -6,7 +6,7 @@
 */
 .details-item {
   text-align: left;
-  padding: .5rem .75rem;
+  padding: 0.5rem 0.75rem;
   border-top: 1px solid #f3f3f3;
 }
 .details-item:first-child {
@@ -20,17 +20,17 @@
 .toggle-icon {
   vertical-align: text-top;
   display: inline-block;
-  margin-right: .5rem;
+  margin-right: 0.5rem;
 }
 .details-item-elements {
   border-top: 1px dashed #dadada;
-  margin-top: .5rem;
-  padding-top: .5rem;
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
   list-style: disc;
   padding-left: 1rem;
 }
 .details-item-elements > li {
-  padding: .25rem 0;
+  padding: 0.25rem 0;
   line-height: 1rem;
 }
 .details-item-elements .apiname {

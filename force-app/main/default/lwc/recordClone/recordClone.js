@@ -132,15 +132,15 @@ export default class RecordClone extends NavigationMixin(LightningElement) {
     return { ...sObjectSummary, children: children };
   }
 
-  buildErrorMessage = errors => {
+  buildErrorMessage = (errors) => {
     let errorMessage = "";
     if (Array.isArray(errors)) {
-      errors.forEach(err => {
+      errors.forEach((err) => {
         errorMessage += `[${err.statusCode}] ${err.message}\n`;
       });
     } else if (errors instanceof Object) {
       for (let key in errors) {
-        if (errors.hasOwnProperty(key)) {
+        if (Object.prototype.hasOwnProperty.call(errors, key)) {
           const errs = errors[key];
           for (let err of errs) {
             errorMessage += `${key} - [${err.statusCode}] ${err.message}\n`;
@@ -151,7 +151,7 @@ export default class RecordClone extends NavigationMixin(LightningElement) {
     return errorMessage;
   };
 
-  handleErrors = errors => {
+  handleErrors = (errors) => {
     console.log(errors);
     let errorMessage = "Unknown error";
     if (errors && errors.body) {
@@ -175,7 +175,7 @@ export default class RecordClone extends NavigationMixin(LightningElement) {
     this.dispatchEvent(toastEvent);
   };
 
-  showErrorToast = message => {
+  showErrorToast = (message) => {
     const errorToast = new ShowToastEvent({
       variant: "error",
       title: "RecordClone Error",
@@ -184,7 +184,7 @@ export default class RecordClone extends NavigationMixin(LightningElement) {
     this.dispatchEvent(errorToast);
   };
 
-  navTo = recordId => {
+  navTo = (recordId) => {
     this[NavigationMixin.Navigate]({
       type: "standard__recordPage",
       attributes: {
@@ -194,7 +194,7 @@ export default class RecordClone extends NavigationMixin(LightningElement) {
     });
   };
 
-  handleRecordNameChange = e => {
+  handleRecordNameChange = (e) => {
     this.newParentRecordName = e.target.value;
   };
 
@@ -216,7 +216,7 @@ export default class RecordClone extends NavigationMixin(LightningElement) {
       excludedFieldNames: this.excludedFieldNames,
       childRecordNameType: this.childRecordNameType
     })
-      .then(clonedRecord => {
+      .then((clonedRecord) => {
         if (!clonedRecord) {
           throw new Error("No Data");
         }

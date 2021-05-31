@@ -101,7 +101,11 @@ global with sharing class RecordCloneController {
     category='Record Clone'
   )
   global static List<List<Id>> clone(List<List<Id>> recordIds) {
-    if (recordIds == null || recordIds.size() <= 0 || recordIds[0].size() <= 0) {
+    if (
+      recordIds == null ||
+      recordIds.size() <= 0 ||
+      recordIds[0].size() <= 0
+    ) {
       return null;
     }
 

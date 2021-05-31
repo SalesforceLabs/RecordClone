@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <!-- 
   Copyright (c) 2020, salesforce.com, inc.
   All rights reserved.
@@ -20,12 +20,29 @@
         <target>lightningCommunity__Default</target>
     </targets>
     <targetConfigs>
-        <targetConfig targets="lightning__RecordPage, lightning__AppPage, lightning__HomePage, lightning__UtilityBar, lightning__FlowScreen">
-            <property name="targetSObject" type="String" label="Debug target sObject name" default="" />
+        <targetConfig
+      targets="lightning__RecordPage, lightning__AppPage, lightning__HomePage, lightning__UtilityBar, lightning__FlowScreen"
+    >
+            <property
+        name="targetSObject"
+        type="String"
+        label="Debug target sObject name"
+        default=""
+      />
         </targetConfig>
         <targetConfig targets="lightningCommunity__Default">
-            <property name="recordId" type="String" label="Record ID" description="The value should be {!recordId}."/>
-            <property name="targetSObject" type="String" label="Debug target sObject name" default="" />
+            <property
+        name="recordId"
+        type="String"
+        label="Record ID"
+        description="The value should be {!recordId}."
+      />
+            <property
+        name="targetSObject"
+        type="String"
+        label="Debug target sObject name"
+        default=""
+      />
         </targetConfig>
     </targetConfigs>
 </LightningComponentBundle>

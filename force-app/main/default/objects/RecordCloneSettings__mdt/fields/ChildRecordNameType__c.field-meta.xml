@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <!-- 
   Copyright (c) 2020, salesforce.com, inc.
   All rights reserved.
@@ -28,7 +28,8 @@
                 <label>Cloned - [Child Record Name]</label>
             </value>
             <value>
-                <fullName>Cloned - [Child Record Name] - [YYYY/mm/dd HH:ii]</fullName>
+                <fullName
+        >Cloned - [Child Record Name] - [YYYY/mm/dd HH:ii]</fullName>
                 <default>false</default>
                 <label>Cloned - [Child Record Name] - [YYYY/mm/dd HH:ii]</label>
             </value>

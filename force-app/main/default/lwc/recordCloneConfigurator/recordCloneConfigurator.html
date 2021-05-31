@@ -1,5 +1,5 @@
 <template>
-<!-- 
+  <!-- 
   Copyright (c) 2020, salesforce.com, inc.
   All rights reserved.
   SPDX-License-Identifier: BSD-3-Clause
@@ -8,7 +8,7 @@
   <div class="slds-card">
     <div class="slds-card__body slds-card__body_inner">
       <h1 class="title">Record Clone Configuration Helper</h1>
-      <div class="section" style="position:relative;min-height:80px;">
+      <div class="section" style="position: relative; min-height: 80px">
         <template if:true={isInvalidObjectName}>
           <h4 class="slds-vertical-bottom_small">Error : Invalid sObject</h4>
         </template>
@@ -28,7 +28,7 @@
                 <li key={child}>{child}</li>
               </template>
             </ul>
-            <p class="slds-m-vertical_small" style="word-break: break-all;">
+            <p class="slds-m-vertical_small" style="word-break: break-all">
               {childrenListStr}
             </p>
           </template>

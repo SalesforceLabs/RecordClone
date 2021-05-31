@@ -623,6 +623,7 @@ private class RecordCloneTest {
     caseIds.add(c3.Id);
     List<Id> oppIds = new List<Id>();
     oppIds.add(o.Id);
+
     List<List<Id>> forInvocable1 = new List<List<Id>>();
     forInvocable1.add(caseIds);
     List<List<Id>> forInvocable2 = new List<List<Id>>();
