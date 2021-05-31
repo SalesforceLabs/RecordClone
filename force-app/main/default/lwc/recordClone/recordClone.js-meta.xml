@@ -6,7 +6,7 @@
   For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause 
 -->
 <LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
-    <apiVersion>52.0</apiVersion>
+    <apiVersion>51.0</apiVersion>
     <isExposed>true</isExposed>
     <masterLabel>Record Clone</masterLabel>
     <description>Cloning a record with related child records.</description>
@@ -21,52 +21,213 @@
     </targets>
     <targetConfigs>
         <targetConfig targets="lightning__UtilityBar, lightning__FlowScreen">
-            <property name="componentTitle" type="String" label="Component Title" default="" />
-            <property name="cloneButtonLabel" type="String" label="Clone Button Label" default="Clone" />
-            <property name="nameInputLabel" type="String" label="Record name input label" default="New record name" />
-            <property name="excludedFieldNames" type="String" label="Fields to be NOT cloned (comma[,] separate)" placeholder="use comma (,) to set multiple fields" />
-            <property name="childRelationshipNames" type="String" label="Child relations to be cloned (comma[,] separate)" placeholder="use comma (,) to set multiple children"  />
-            <property name="templateRecordId" type="String" label="Template Record ID" />
-            <property name="showDetails" type="Boolean" label="Show clone details" default="true"/>
-            <property name="childRecordNameType" type="String" label="Cloned child record name format" datasource="apex://RecordCloneChildRecordNamePicklist" />
+            <property
+        name="componentTitle"
+        type="String"
+        label="Component Title"
+        default=""
+      />
+            <property
+        name="cloneButtonLabel"
+        type="String"
+        label="Clone Button Label"
+        default="Clone"
+      />
+            <property
+        name="nameInputLabel"
+        type="String"
+        label="Record name input label"
+        default="New record name"
+      />
+            <property
+        name="excludedFieldNames"
+        type="String"
+        label="Fields to be NOT cloned (comma[,] separate)"
+        placeholder="use comma (,) to set multiple fields"
+      />
+            <property
+        name="childRelationshipNames"
+        type="String"
+        label="Child relations to be cloned (comma[,] separate)"
+        placeholder="use comma (,) to set multiple children"
+      />
+            <property
+        name="templateRecordId"
+        type="String"
+        label="Template Record ID"
+      />
+            <property
+        name="showDetails"
+        type="Boolean"
+        label="Show clone details"
+        default="true"
+      />
+            <property
+        name="childRecordNameType"
+        type="String"
+        label="Cloned child record name format"
+        datasource="apex://RecordCloneChildRecordNamePicklist"
+      />
         </targetConfig>
         <targetConfig targets="lightning__HomePage">
-            <property name="componentTitle" type="String" label="Component Title" default="" />
-            <property name="cloneButtonLabel" type="String" label="Clone Button Label" default="Clone" />
-            <property name="nameInputLabel" type="String" label="Record name input label" default="New record name" />
-            <property name="excludedFieldNames" type="String" label="Fields to be NOT cloned (comma[,] separate)" placeholder="use comma (,) to set multiple fields" />
-            <property name="childRelationshipNames" type="String" label="Child relations to be cloned (comma[,] separate)" placeholder="use comma (,) to set multiple children"  />
-            <property name="templateRecordId" type="String" label="Template Record ID" />
-            <property name="showDetails" type="Boolean" label="Show clone details" default="true"/>
-            <property name="childRecordNameType" type="String" label="Cloned child record name format" datasource="apex://RecordCloneChildRecordNamePicklist" />
+            <property
+        name="componentTitle"
+        type="String"
+        label="Component Title"
+        default=""
+      />
+            <property
+        name="cloneButtonLabel"
+        type="String"
+        label="Clone Button Label"
+        default="Clone"
+      />
+            <property
+        name="nameInputLabel"
+        type="String"
+        label="Record name input label"
+        default="New record name"
+      />
+            <property
+        name="excludedFieldNames"
+        type="String"
+        label="Fields to be NOT cloned (comma[,] separate)"
+        placeholder="use comma (,) to set multiple fields"
+      />
+            <property
+        name="childRelationshipNames"
+        type="String"
+        label="Child relations to be cloned (comma[,] separate)"
+        placeholder="use comma (,) to set multiple children"
+      />
+            <property
+        name="templateRecordId"
+        type="String"
+        label="Template Record ID"
+      />
+            <property
+        name="showDetails"
+        type="Boolean"
+        label="Show clone details"
+        default="true"
+      />
+            <property
+        name="childRecordNameType"
+        type="String"
+        label="Cloned child record name format"
+        datasource="apex://RecordCloneChildRecordNamePicklist"
+      />
             <supportedFormFactors>
                 <supportedFormFactor type="Large" />
             </supportedFormFactors>
         </targetConfig>
         <targetConfig targets="lightning__RecordPage, lightning__AppPage">
-            <property name="componentTitle" type="String" label="Component Title" default="" />
-            <property name="cloneButtonLabel" type="String" label="Clone Button Label" default="Clone" />
-            <property name="nameInputLabel" type="String" label="Record name input label" default="New record name" />
-            <property name="excludedFieldNames" type="String" label="Fields to be NOT cloned (comma[,] separate)" placeholder="use comma (,) to set multiple fields" />
-            <property name="childRelationshipNames" type="String" label="Child relations to be cloned (comma[,] separate)" placeholder="use comma (,) to set multiple children"  />
-            <property name="templateRecordId" type="String" label="Template Record ID" />
-            <property name="showDetails" type="Boolean" label="Show clone details" default="true"/>
-            <property name="childRecordNameType" type="String" label="Cloned child record name format" datasource="apex://RecordCloneChildRecordNamePicklist" />
+            <property
+        name="componentTitle"
+        type="String"
+        label="Component Title"
+        default=""
+      />
+            <property
+        name="cloneButtonLabel"
+        type="String"
+        label="Clone Button Label"
+        default="Clone"
+      />
+            <property
+        name="nameInputLabel"
+        type="String"
+        label="Record name input label"
+        default="New record name"
+      />
+            <property
+        name="excludedFieldNames"
+        type="String"
+        label="Fields to be NOT cloned (comma[,] separate)"
+        placeholder="use comma (,) to set multiple fields"
+      />
+            <property
+        name="childRelationshipNames"
+        type="String"
+        label="Child relations to be cloned (comma[,] separate)"
+        placeholder="use comma (,) to set multiple children"
+      />
+            <property
+        name="templateRecordId"
+        type="String"
+        label="Template Record ID"
+      />
+            <property
+        name="showDetails"
+        type="Boolean"
+        label="Show clone details"
+        default="true"
+      />
+            <property
+        name="childRecordNameType"
+        type="String"
+        label="Cloned child record name format"
+        datasource="apex://RecordCloneChildRecordNamePicklist"
+      />
             <supportedFormFactors>
                 <supportedFormFactor type="Small" />
                 <supportedFormFactor type="Large" />
             </supportedFormFactors>
         </targetConfig>
         <targetConfig targets="lightningCommunity__Default">
-            <property name="recordId" type="String" label="Record ID" description="The value should be {!recordId}."/>
-            <property name="componentTitle" type="String" label="Component Title" default="" />
-            <property name="cloneButtonLabel" type="String" label="Clone Button Label" default="Clone" />
-            <property name="nameInputLabel" type="String" label="Record name input label" default="New record name" />
-            <property name="excludedFieldNames" type="String" label="Fields to be NOT cloned (comma[,] separate)" placeholder="use comma (,) to set multiple fields" />
-            <property name="childRelationshipNames" type="String" label="Child relations to be cloned (comma[,] separate)" placeholder="use comma (,) to set multiple children"  />
-            <property name="templateRecordId" type="String" label="Template Record ID" />
-            <property name="showDetails" type="Boolean" label="Show clone details" default="true"/>
-            <property name="childRecordNameType" type="String" label="Cloned child record name format" datasource="apex://RecordCloneChildRecordNamePicklist" />
+            <property
+        name="recordId"
+        type="String"
+        label="Record ID"
+        description="The value should be {!recordId}."
+      />
+            <property
+        name="componentTitle"
+        type="String"
+        label="Component Title"
+        default=""
+      />
+            <property
+        name="cloneButtonLabel"
+        type="String"
+        label="Clone Button Label"
+        default="Clone"
+      />
+            <property
+        name="nameInputLabel"
+        type="String"
+        label="Record name input label"
+        default="New record name"
+      />
+            <property
+        name="excludedFieldNames"
+        type="String"
+        label="Fields to be NOT cloned (comma[,] separate)"
+        placeholder="use comma (,) to set multiple fields"
+      />
+            <property
+        name="childRelationshipNames"
+        type="String"
+        label="Child relations to be cloned (comma[,] separate)"
+        placeholder="use comma (,) to set multiple children"
+      />
+            <property
+        name="templateRecordId"
+        type="String"
+        label="Template Record ID"
+      />
+            <property
+        name="showDetails"
+        type="Boolean"
+        label="Show clone details"
+        default="true"
+      />
+            <property
+        name="childRecordNameType"
+        type="String"
+        label="Cloned child record name format"
+        datasource="apex://RecordCloneChildRecordNamePicklist"
+      />
         </targetConfig>
     </targetConfigs>
     
