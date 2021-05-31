@@ -1,5 +1,5 @@
 <template>
-<!-- 
+  <!-- 
   Copyright (c) 2020, salesforce.com, inc.
   All rights reserved.
   SPDX-License-Identifier: BSD-3-Clause
@@ -16,9 +16,7 @@
         {title}
         <template if:true={isError}>
           <br />
-          <span class="child-rel-error">
-            {errorMessage}
-          </span>
+          <span class="child-rel-error"> {errorMessage} </span>
         </template>
       </h4>
       <template if:true={shouldShow}>
@@ -30,7 +28,8 @@
           </template>
           <template for:each={ngItems} for:item="ng">
             <li key={ng.apiName}>
-              <del>{ng.label} (<span class="apiname">{ng.apiName}</span>)</del> :
+              <del>{ng.label} (<span class="apiname">{ng.apiName}</span>)</del>
+              :
               <span class="ncf-reason">{ng.errorMessage}</span>
             </li>
           </template>

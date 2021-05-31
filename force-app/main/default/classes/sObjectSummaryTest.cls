@@ -124,11 +124,7 @@ private class sObjectSummaryTest {
 
   @IsTest
   private static void testGetByRecordId() {
-
-    Account acc = new Account(
-      Name = 'Hello',
-      Phone = '0123456789'
-    );
+    Account acc = new Account(Name = 'Hello', Phone = '0123456789');
     insert acc;
 
     Contact con = new Contact(LastName = 'Test', AccountId = acc.Id);
