@@ -198,10 +198,6 @@ public with sharing class RecordCloneHandler {
       // append to child records' name fields
       String todayStr = Datetime.now().format('yyyy/MM/dd HH:mm');
 
-      // <apiName, <recordId, sObject>>
-      Map<String, List<sObject>> uniqSobjMap = new Map<String, List<sObject>>();
-      Map<String, List<String>> parentRelFieldMap = new Map<String, List<String>>();
-      Map<String, sObjectSummary> summaryMap = new Map<String, sObjectSummary>();
       // remove child record IDs, assign then cloned parent record Id to ref field
       for (String childRelName : childrens.keySet()) {
         sObjectSummary childSummary = sObjectSummary.children.get(childRelName);
@@ -237,31 +233,6 @@ public with sharing class RecordCloneHandler {
           }
         }
 
-        List<sObject> existingRecords = uniqSobjMap.get(childSummary.apiName);
-        List<String> existingParentNames = parentRelFieldMap.get(
-          childSummary.apiName
-        );
-        if (existingRecords == null) {
-          summaryMap.put(childSummary.apiName, childSummary);
-          uniqSobjMap.put(childSummary.apiName, children);
-          parentRelFieldMap.put(
-            childSummary.apiName,
-            new List<String>{ childSummary.parentRelationshipField }
-          );
-        } else {
-          existingRecords.addAll(children);
-          uniqSobjMap.put(
-            childSummary.apiName,
-            new List<sObject>(new Set<sObject>(existingRecords))
-          );
-          existingParentNames.add(childSummary.parentRelationshipField);
-          parentRelFieldMap.put(childSummary.apiName, existingParentNames);
-        }
-      }
-
-      for (String childApiName : uniqSobjMap.keySet()) {
-        List<sObject> children = uniqSobjMap.get(childApiName);
-        sObjectSummary childSummary = summaryMap.get(childApiName);
         for (Integer i = 0; i < children.size(); i++) {
           children[i].put('Id', null);
           if (childSummary.isNamable) {
@@ -282,13 +253,9 @@ public with sharing class RecordCloneHandler {
             }
             children[i].put(childSummary.nameField, nameValue);
           }
-          for (
-            String parentRelationshipField : parentRelFieldMap.get(childApiName)
-          ) {
-            children[i].put(parentRelationshipField, cloned.Id);
-          }
-        }
 
+          children[i].put(childSummary.parentRelationshipField, cloned.Id);
+        }
         insert children;
       }
     }
