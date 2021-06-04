@@ -22,18 +22,14 @@
       <template if:true={shouldShow}>
         <ul class="details-item-elements">
           <template for:each={okItems} for:item="ok">
-            <li key={ok.apiName}>
-              {ok.label} (<span class="apiname"
-                >{ok.parentRelationshipField}</span
-              >)
+            <li key={ok.uniqueName}>
+              {ok.label} (<span class="apiname">{ok.uniqueName}</span>)
             </li>
           </template>
           <template for:each={ngItems} for:item="ng">
-            <li key={ng.apiName}>
+            <li key={ng.uniqueName}>
               <del
-                >{ng.label} (<span class="apiname"
-                  >{ng.parentRelationshipField}</span
-                >)</del
+                >{ng.label} (<span class="apiname">{ng.uniqueName}</span>)</del
               >
               :
               <span class="ncf-reason">{ng.errorMessage}</span>

@@ -21,17 +21,23 @@
       </h4>
       <template if:true={shouldShow}>
         <ul class="details-item-elements">
-          <template for:each={okItems} for:item="ok">
-            <li key={ok.apiName}>
-              {ok.label} (<span class="apiname">{ok.apiName}</span>)
-            </li>
+          <template if:true={okItems}>
+            <template for:each={okItems} for:item="ok">
+              <li key={ok.uniqueName}>
+                {ok.label} (<span class="apiname">{ok.apiName}</span>)
+              </li>
+            </template>
           </template>
-          <template for:each={ngItems} for:item="ng">
-            <li key={ng.apiName}>
-              <del>{ng.label} (<span class="apiname">{ng.apiName}</span>)</del>
-              :
-              <span class="ncf-reason">{ng.errorMessage}</span>
-            </li>
+          <template if:true={ngItems}>
+            <template for:each={ngItems} for:item="ng">
+              <li key={ng.uniqueName}>
+                <del
+                  >{ng.label} (<span class="apiname">{ng.apiName}</span>)</del
+                >
+                :
+                <span class="ncf-reason">{ng.errorMessage}</span>
+              </li>
+            </template>
           </template>
         </ul>
       </template>

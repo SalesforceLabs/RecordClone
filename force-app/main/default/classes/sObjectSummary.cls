@@ -10,6 +10,8 @@ public with sharing class sObjectSummary {
   @AuraEnabled
   public String apiName;
   @AuraEnabled
+  public String uniqueName;
+  @AuraEnabled
   public Boolean isClonable;
   @AuraEnabled
   public String nameField;
@@ -115,6 +117,7 @@ public with sharing class sObjectSummary {
   ) {
     this.label = describe.getLabel();
     this.apiName = describe.getLocalName();
+    this.uniqueName = this.apiName;
     this.isNamable = false;
     this.fields = new List<sFieldSummary>();
 
@@ -334,13 +337,14 @@ public with sharing class sObjectSummary {
     for (Schema.ChildRelationship child : describe.getChildRelationships()) {
       // Match inputted child relationship names with actual object names.
       if (childRelationshipSet.contains(child.getRelationshipName())) {
-        sObjectSummary sObjectSummary = new sObjectSummary(
+        sObjectSummary childSummary = new sObjectSummary(
           child.getChildSObject().getDescribe()
         );
-        sObjectSummary.parentRelationshipField = child.getField()
+        childSummary.parentRelationshipField = child.getField()
           .getDescribe()
           .getName();
-        children.put(child.getRelationshipName(), sObjectSummary);
+        childSummary.uniqueName += ' - ' + childSummary.parentRelationshipField;
+        children.put(child.getRelationshipName(), childSummary);
       }
     }
     return children;
