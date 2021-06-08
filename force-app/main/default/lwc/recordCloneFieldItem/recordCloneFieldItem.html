@@ -23,14 +23,14 @@
         <ul class="details-item-elements">
           <template if:true={okItems}>
             <template for:each={okItems} for:item="ok">
-              <li key={ok.uniqueName}>
+              <li key={ok.apiName}>
                 {ok.label} (<span class="apiname">{ok.apiName}</span>)
               </li>
             </template>
           </template>
           <template if:true={ngItems}>
             <template for:each={ngItems} for:item="ng">
-              <li key={ng.uniqueName}>
+              <li key={ng.apiName}>
                 <del
                   >{ng.label} (<span class="apiname">{ng.apiName}</span>)</del
                 >
