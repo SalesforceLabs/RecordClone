@@ -20,6 +20,8 @@ public with sharing class sObjectSummary {
   @AuraEnabled
   public String parentRelationshipField;
   @AuraEnabled
+  public Boolean isEditableParentRelationship;
+  @AuraEnabled
   public List<sFieldSummary> fields;
   @AuraEnabled
   public Boolean isDeletable;
@@ -340,9 +342,10 @@ public with sharing class sObjectSummary {
         sObjectSummary childSummary = new sObjectSummary(
           child.getChildSObject().getDescribe()
         );
-        childSummary.parentRelationshipField = child.getField()
-          .getDescribe()
-          .getName();
+        Schema.DescribeFieldResult cdfr = child.getField().getDescribe();
+        childSummary.parentRelationshipField = cdfr.getName();
+        childSummary.isEditableParentRelationship =
+          cdfr.isAccessible() && cdfr.isUpdateable();
         childSummary.uniqueName += ' - ' + childSummary.parentRelationshipField;
         children.put(child.getRelationshipName(), childSummary);
       }

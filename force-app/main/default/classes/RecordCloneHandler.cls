@@ -5,7 +5,7 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 public with sharing class RecordCloneHandler {
-  // single records
+  // single record
   public static CloneQueryResult getOriginalRecord(
     Id recordId,
     sObjectSummary sObjSummary
@@ -25,6 +25,8 @@ public with sharing class RecordCloneHandler {
         recordId +
         '\'';
       sObject parent = Database.query(q);
+
+      // fetch child records
       Map<String, List<sObject>> childrens = execChildQueries(
         recordId,
         sObjSummary
@@ -73,7 +75,7 @@ public with sharing class RecordCloneHandler {
     }
   }
 
-  public static Map<String, List<sObject>> execChildQueries(
+  private static Map<String, List<sObject>> execChildQueries(
     Id parentId,
     sObjectSummary parentSummary
   ) {
@@ -190,74 +192,130 @@ public with sharing class RecordCloneHandler {
       return null;
     }
 
-    // cloning child records
     if (
-      sObjectSummary.children != null &&
-      sObjectSummary.children.keySet().size() > 0
+      sObjectSummary.children == null ||
+      sObjectSummary.children.keySet().size() == 0
     ) {
-      // append to child records' name fields
-      String todayStr = Datetime.now().format('yyyy/MM/dd HH:mm');
+      return cloned;
+    }
 
-      // remove child record IDs, assign then cloned parent record Id to ref field
-      for (String childRelName : childrens.keySet()) {
-        sObjectSummary childSummary = sObjectSummary.children.get(childRelName);
+    // cloning child records
 
-        if (!childSummary.isClonable) {
-          continue;
-        }
+    // <objectApiName, <recordId, sObject>>
+    Map<String, Map<Id, sObject>> childrensMap = new Map<String, Map<Id, sObject>>();
+    Map<String, List<String>> parentRelFieldMap = new Map<String, List<String>>();
+    Map<String, sObjectSummary> summaryMap = new Map<String, sObjectSummary>();
 
-        List<sObject> children = childrens.get(childRelName);
-        if (children == null || children.size() == 0) {
-          continue;
-        }
+    for (String childRelName : childrens.keySet()) {
+      sObjectSummary childSummary = sObjectSummary.children.get(childRelName);
 
-        // On creating an opportunity record, system automatically creates an OpportunityContactRole record.
-        // Delete the created record as of now.
-        if (
-          sObjectSummary.apiName == 'Opportunity' &&
-          childRelName == 'OpportunityContactRoles'
-        ) {
-          OpportunityContactRole[] ocrs = [
-            SELECT Id
-            FROM OpportunityContactRole
-            WHERE OpportunityId = :cloned.Id
-          ];
-
-          if (ocrs.size() > 0 && childSummary.isDeletable) {
-            try {
-              delete ocrs;
-            } catch (DMLException e) {
-              // if failed to delete auto-generated OpportunityContactRole,
-              // leave it.
-            }
-          }
-        }
-
-        for (Integer i = 0; i < children.size(); i++) {
-          children[i].put('Id', null);
-          if (childSummary.isNamable) {
-            String originalRecordName = (String) children[i]
-              .get(childSummary.nameField);
-            String nameValue = originalRecordName;
-
-            if (
-              childRecordNameType ==
-              RecordCloneChildRecordNamePicklist.valueWithCloned
-            ) {
-              nameValue = 'Cloned - ' + originalRecordName;
-            } else if (
-              childRecordNameType ==
-              RecordCloneChildRecordNamePicklist.valueWithClonedAndDate
-            ) {
-              nameValue = 'Cloned - ' + originalRecordName + ' - ' + todayStr;
-            }
-            children[i].put(childSummary.nameField, nameValue);
-          }
-
-          children[i].put(childSummary.parentRelationshipField, cloned.Id);
-        }
-        insert children;
+      if (!childSummary.isClonable) {
+        continue;
       }
+
+      List<sObject> children = childrens.get(childRelName);
+      if (children == null || children.size() == 0) {
+        continue;
+      }
+
+      List<String> existingParentNames = parentRelFieldMap.get(
+        childSummary.apiName
+      );
+      if (existingParentNames == null) {
+        // is first time to check the sObject type
+        summaryMap.put(childSummary.apiName, childSummary);
+        childrensMap.put(childSummary.apiName, new Map<Id, sObject>(children));
+        parentRelFieldMap.put(
+          childSummary.apiName,
+          new List<String>{ childSummary.parentRelationshipField }
+        );
+      } else {
+        // has existing sObject type
+        Map<Id, sObject> existingChildren = childrensMap.get(
+          childSummary.apiName
+        );
+        existingChildren.putAll(children);
+        childrensMap.put(childSummary.apiName, existingChildren);
+        existingParentNames.add(childSummary.parentRelationshipField);
+        parentRelFieldMap.put(childSummary.apiName, existingParentNames);
+      }
+    }
+
+    for (String childRelName : childrens.keySet()) {
+      sObjectSummary childSummary = sObjectSummary.children.get(childRelName);
+
+      if (!childSummary.isClonable) {
+        continue;
+      }
+
+      List<sObject> children = childrens.get(childRelName);
+      if (children == null || children.size() == 0) {
+        continue;
+      }
+
+      // On creating an opportunity record, system automatically creates an OpportunityContactRole record.
+      // Delete the created record as of now.
+      if (
+        sObjectSummary.apiName == 'Opportunity' &&
+        childRelName == 'OpportunityContactRoles'
+      ) {
+        OpportunityContactRole[] ocrs = [
+          SELECT Id
+          FROM OpportunityContactRole
+          WHERE OpportunityId = :cloned.Id
+        ];
+
+        if (ocrs.size() > 0 && childSummary.isDeletable) {
+          try {
+            delete ocrs;
+          } catch (DMLException e) {
+            // if failed to delete auto-generated OpportunityContactRole,
+            // leave it.
+          }
+        }
+      }
+
+      Map<Id, sObject> childrenMap = childrensMap.get(childSummary.apiName);
+
+      // TODO: If child record has master-detail relationship with its parent,
+      // and "Allow reparenting" setting is off, the field is not updatable.
+      // take it into account with the following options
+      // 1: skip the child relation,
+      // 2: leave the field with the original record id,
+      // 3: let admin choose the behaviour by user.
+      // * option 2 is dangerous when children is able to copy, which id (before/after clone) should be attached to the children?
+      System.debug(
+        childSummary.parentRelationshipField +
+        ' ' +
+        childSummary.isEditableParentRelationship
+      );
+
+      for (Integer i = 0; i < children.size(); i++) {
+        Id childId = (Id) children[i].get('Id');
+        sObject child = childrenMap.get(childId);
+        if (childSummary.isNamable) {
+          // set cloned child records' name value
+          child.put(
+            childSummary.nameField,
+            getNameValue(
+              (String) child.get(childSummary.nameField),
+              childRecordNameType
+            )
+          );
+        }
+
+        child.put(childSummary.parentRelationshipField, cloned.Id);
+      }
+    }
+
+    // remove child record Ids and exec insertion
+    for (String childrensKey : childrensMap.keySet()) {
+      Map<Id, sObject> childrenMap = childrensMap.get(childrensKey);
+      List<sObject> children = childrenMap.values();
+      for (Integer i = 0; i < children.size(); i++) {
+        children[i].put('Id', null);
+      }
+      insert children;
     }
 
     return cloned;
@@ -267,9 +325,6 @@ public with sharing class RecordCloneHandler {
     List<CloneQueryResult> results,
     sObjectSummary sObjectSummary
   ) {
-    // append to child records' name fields
-    String todayStr = Datetime.now().format('yyyy/MM/dd HH:mm');
-
     List<sObject> parents = new List<sObject>();
     for (CloneQueryResult result : results) {
       parents.add(result.parent);
@@ -285,22 +340,13 @@ public with sharing class RecordCloneHandler {
         // cloning.put(sObjectSummary.nameField, newRecordName);
 
         if (sObjectSummary.isNamable) {
-          String originalRecordName = (String) cloning.get(
-            sObjectSummary.nameField
+          cloning.put(
+            sObjectSummary.nameField,
+            getNameValue(
+              (String) cloning.get(sObjectSummary.nameField),
+              sObjectSummary.childRecordNameFormat
+            )
           );
-          String nameValue = originalRecordName;
-          if (
-            sObjectSummary.childRecordNameFormat ==
-            RecordCloneChildRecordNamePicklist.valueWithCloned
-          ) {
-            nameValue = 'Cloned - ' + originalRecordName;
-          } else if (
-            sObjectSummary.childRecordNameFormat ==
-            RecordCloneChildRecordNamePicklist.valueWithClonedAndDate
-          ) {
-            nameValue = 'Cloned - ' + originalRecordName + ' - ' + todayStr;
-          }
-          cloning.put(sObjectSummary.nameField, nameValue);
         }
       }
     }
@@ -344,21 +390,14 @@ public with sharing class RecordCloneHandler {
           for (Integer i = 0; i < children.size(); i++) {
             children[i].put('Id', null);
             if (childSummary.isNamable) {
-              String originalRecordName = (String) children[i]
-                .get(childSummary.nameField);
-              String nameValue = originalRecordName;
-              if (
-                sObjectSummary.childRecordNameFormat ==
-                RecordCloneChildRecordNamePicklist.valueWithCloned
-              ) {
-                nameValue = 'Cloned - ' + originalRecordName;
-              } else if (
-                sObjectSummary.childRecordNameFormat ==
-                RecordCloneChildRecordNamePicklist.valueWithClonedAndDate
-              ) {
-                nameValue = 'Cloned - ' + originalRecordName + ' - ' + todayStr;
-              }
-              children[i].put(childSummary.nameField, nameValue);
+              children[i]
+                .put(
+                  childSummary.nameField,
+                  getNameValue(
+                    (String) children[i].get(childSummary.nameField),
+                    sObjectSummary.childRecordNameFormat
+                  )
+                );
             }
 
             children[i]
@@ -388,5 +427,26 @@ public with sharing class RecordCloneHandler {
     }
 
     return parents;
+  }
+
+  private static String todayStr = Datetime.now().format('yyyy/MM/dd HH:mm');
+
+  private static String getNameValue(
+    String originalRecordName,
+    String childRecordNameFormat
+  ) {
+    if (
+      childRecordNameFormat ==
+      RecordCloneChildRecordNamePicklist.valueWithCloned
+    ) {
+      return 'Cloned - ' + originalRecordName;
+    } else if (
+      childRecordNameFormat ==
+      RecordCloneChildRecordNamePicklist.valueWithClonedAndDate
+    ) {
+      return 'Cloned - ' + originalRecordName + ' - ' + todayStr;
+    } else {
+      return originalRecordName;
+    }
   }
 }
