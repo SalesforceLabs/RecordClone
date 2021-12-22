@@ -32,7 +32,6 @@ public with sharing class RecordCloneDebugController {
       DescribeSObjectResult describe = recordId.getSObjectType().getDescribe();
       objectName = describe.getLocalName();
     }
-    System.debug(objectName);
     Map<String, String> result = new Map<String, String>();
     sObjectType sObjType = (sObjectType) Schema.getGlobalDescribe()
       .get(objectName);

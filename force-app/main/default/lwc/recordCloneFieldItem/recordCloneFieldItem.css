@@ -1,0 +1,44 @@
+/*
+  Copyright (c) 2020, salesforce.com, inc.
+  All rights reserved.
+  SPDX-License-Identifier: BSD-3-Clause
+  For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause 
+*/
+.details-item {
+  text-align: left;
+  padding: 0.5rem 0.75rem;
+  border-top: 1px solid #f3f3f3;
+}
+.details-item:first-child {
+  border-top: none;
+}
+.details-item-title {
+  line-height: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+.toggle-icon {
+  vertical-align: text-top;
+  display: inline-block;
+  margin-right: 0.5rem;
+}
+.details-item-elements {
+  border-top: 1px dashed #dadada;
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  list-style: disc;
+  padding-left: 1rem;
+}
+.details-item-elements > li {
+  padding: 0.25rem 0;
+  line-height: 1rem;
+}
+.details-item-elements .apiname {
+  font-style: oblique;
+}
+.child-rel-error {
+  color: #ff0000;
+}
+.ncf-reason {
+  color: #f14848;
+}

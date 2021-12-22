@@ -72,18 +72,19 @@ global with sharing class RecordCloneController {
     }
 
     // get the original record
-    sObject originalRecord = RecordCloneHandler.getOriginalRecord(
+    CloneQueryResult queryResult = RecordCloneHandler.getOriginalRecord(
       recordId,
       sObjSummary
     );
 
-    if (originalRecord == null) {
+    if (queryResult == null) {
       return null;
     }
 
     // exec clone
     sObject clonedRecord = RecordCloneHandler.cloneRecord(
-      originalRecord,
+      queryResult.parent,
+      queryResult.childrens,
       sObjSummary,
       newParentRecordName,
       childRecordNameType
@@ -118,14 +119,14 @@ global with sharing class RecordCloneController {
       sObjectSummary sObjSummary = sObjectSummary.getByRecordId(rids[0]);
 
       // get original records
-      List<sObject> originalRecords = RecordCloneHandler.getOriginalRecords(
+      List<CloneQueryResult> cloneQueryResults = RecordCloneHandler.getOriginalRecords(
         rids,
         sObjSummary
       );
 
       // exec clone
       Map<Id, sObject> clonedRecords = new Map<Id, sObject>(
-        RecordCloneHandler.cloneRecords(originalRecords, sObjSummary)
+        RecordCloneHandler.cloneRecords(cloneQueryResults, sObjSummary)
       );
 
       clonedRecordList.add(new List<Id>(clonedRecords.keySet()));

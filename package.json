@@ -1,8 +1,8 @@
 {
-  "name": "salesforce-app",
+  "name": "record-clone",
   "private": true,
-  "version": "1.0.0",
-  "description": "Salesforce App",
+  "version": "1.7.0",
+  "description": "Clone record with its child records together",
   "scripts": {
     "lint": "npm run lint:lwc && npm run lint:aura",
     "lint:aura": "eslint **/aura/**",
